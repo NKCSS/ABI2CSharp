@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "Abi2CSharp": {
+      "commandName": "Project",
+      "commandLineArgs": "atomicmarket"
+    }
+  }
+}

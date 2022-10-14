@@ -1,0 +1,14 @@
+﻿using System.Collections.Generic;
+
+namespace Abi2CSharp.Model.ABI
+{
+    public class Table
+    {
+        public string name { get; set; }
+        public string index_type { get; set; }
+        public string type { get; set; }
+        public List<string> key_names { get; set; }
+        public List<string> key_types { get; set; }
+        public override string ToString() => $"{name} => [{type}]";
+    }
+}

@@ -1,0 +1,312 @@
+﻿<#@ template language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+// Auto Generated, do not edit.
+<# if (includeEosioModels) { #>
+using System;
+using System.Globalization;
+using System.IO;
+<# } 
+if (includeEosSharpTest)
+{ #>
+using EosSharp;
+using EosSharp.Core;
+using EosSharp.Core.Api.v1;
+using System.Net.Http;
+<# } #>
+using System.Collections.Generic;
+using System.Threading.Tasks;
+<#
+int lowerBound = (int)'0', upperBound = (int)'9';
+Func<string, string, string> getSafeName = (name, prefix) => {
+    if (name.StartsWith("Model.eosio.")) return name;
+    int firstCharCode = (int)name[0];
+    return ((firstCharCode < lowerBound || firstCharCode > upperBound) ? name : $"{prefix}{name}").Replace('.','_');
+};
+#>
+namespace AlterMe
+{
+    /// <summary>
+    /// EosApi defines api methods to interface with a http handler
+    /// </summary>
+    public static partial class Contracts
+    {    
+        public static class <#= getSafeName(exportName, "c_") #>
+        {
+            public const string contract = "<#= contractName #>";
+            public static class Actions
+            {
+<# foreach (var action in actions) { 
+    string name = getSafeName(action.name, "t_");
+    if(name == action.name)
+    { #>
+                public const string <#= name #> = nameof(<#= name #>);
+<#  } else { #>
+                public const string <#= name #> = "<#= action.name #>";
+<#  }
+} #>
+            }
+            public static class Tables
+            {
+<# foreach (var table in tables) { 
+    string name = getSafeName(table.name, "t_");
+    if(name == table.name)
+    { #>
+                public const string <#= name #> = nameof(<#= name #>);
+<#  } else { #>
+                public const string <#= name #> = "<#= table.name #>";
+<#  }
+} #>
+            }
+            public static class Types
+            {
+<# foreach (var type in types.Keys) { #>
+                public class <#= getSafeName(type, "t_") #> {
+<#  foreach (var field in types[type])
+    { #>
+                    public <#= getSafeName(field.Value, "t_") #> <#= field.Key #>  { get; set; }
+<#  }
+#>
+                }
+<#} #>
+            }
+            public static class Requests
+            {
+<# foreach (var action in actions) { #>
+                public class <#= getSafeName(action.name, "t_") #> : Types.<#= getSafeName(action.type, "t_") #>
+                {
+                }
+<#} #>
+            }
+            public static class Responses
+            {
+<# foreach (var table in tables) { #>
+                public class <#= getSafeName(table.name, "t_") #> : Types.<#= getSafeName(table.type, "t_") #>
+                {
+                }
+<#} #>
+            }
+        }
+    }
+<# if (includeExtensions) { #>
+    public static class Extensions
+    {
+        #region Name-based constants
+        const int NameMaxCharLength = 13;
+        /// <summary>
+        /// The amount of bits an Antelope name is encoded into.
+        /// </summary>
+        const int NameBitLength = 64;
+        /// <summary>
+        /// The amount of bits we can use per character.
+        /// </summary>
+        const int BitsPerNameValue = 5;
+        /// <summary>
+        /// The amount of charcters that can use the full bit length we need (12)
+        /// </summary>
+        const int NameFullBitCharCount = NameBitLength / BitsPerNameValue;
+        /// <summary>
+        /// The amount of bits that can have the full-length (60 in our case)
+        /// </summary>
+        const int NameBitsWithFullBitLength = NameFullBitCharCount * BitsPerNameValue;
+        /// <summary>
+        /// The amount of bits that remain for the last value (4)
+        /// </summary>
+        const int NameRestBits = NameBitLength - NameBitsWithFullBitLength;
+        /// <summary>
+        /// The last bit index that has <see cref="BitsPerNameValue"/> bits per encoded character.
+        /// </summary>
+        /// <remarks>
+        /// Indexes are 0-based, so we take the amount of bits that are full-length values and substract 1.
+        /// </remarks>
+        const int LastFullLengthNameBitIndex = NameBitsWithFullBitLength - 1;
+        /// <summary>
+        /// The bitmask we use to extract the bits from the value. We shift by the bit length (e.g. overshoot), 
+        /// then substract 1 to get a full set of binary 1 flags for our desired bit length.
+        /// </summary>
+        const int NameValueBitMask = (1 << BitsPerNameValue) - 1;
+        /// <summary>
+        /// The bitmask we use to extract the bits from the value. We shift by the bit length (e.g. overshoot), 
+        /// then substract 1 to get a full set of binary 1 flags for our desired bit length.
+        /// </summary>
+        const int NameRestBitMask = (1 << NameRestBits) - 1;
+        #endregion
+        static Dictionary<char, byte> CharByteLookup;
+        static Dictionary<byte, char> ByteCharLookup;
+        static Dictionary<string, byte> HexLookup;
+        static Extensions()
+        {
+            CharByteLookup = new Dictionary<char, byte>();
+            ByteCharLookup = new Dictionary<byte, char>();
+            CharByteLookup.Add('.', 0);
+            ByteCharLookup.Add(0, '.');
+            for (byte i = 1; i <= 5; ++i)
+            {
+                CharByteLookup.Add(i.ToString()[0], i);
+                ByteCharLookup.Add(i, i.ToString()[0]);
+            }
+            byte offset = 'a' - 6;
+            for (char c = 'a'; c <= 'z'; ++c)
+            {
+                CharByteLookup.Add(c, (byte)((byte)c - offset));
+                ByteCharLookup.Add((byte)((byte)c - offset), c);
+            }
+            HexLookup = new Dictionary<string, byte>(byte.MaxValue);
+            string hex;
+            for (int i = byte.MinValue; i <= byte.MaxValue; ++i)
+            {
+                hex = i.ToString("x2");
+                HexLookup.Add(hex, (byte)i);
+                // Add uppercase variants too, just to be sure
+                hex = hex.ToUpperInvariant();
+                if (!HexLookup.ContainsKey(hex)) HexLookup.Add(hex, (byte)i);
+            }
+        }
+        public static ulong NameToLong(this string name)
+        {
+            ulong result = 0L;
+            int bitIndex = 0, i;
+            byte c;
+            // Process the full-bit-length characters
+            for (i = 0; i < NameFullBitCharCount; i++)
+            {
+                c = i < name.Length ? CharByteLookup[name[i]] : (byte)0;
+                if ((c & 0b00001) == 0b00001) result += 1UL << (59 - bitIndex);
+                if ((c & 0b00010) == 0b00010) result += 1UL << (60 - bitIndex);
+                if ((c & 0b00100) == 0b00100) result += 1UL << (61 - bitIndex);
+                if ((c & 0b01000) == 0b01000) result += 1UL << (62 - bitIndex);
+                if ((c & 0b10000) == 0b10000) result += 1UL << (63 - bitIndex);
+                bitIndex += 5;
+            }
+            // Process the last 4 bits
+            c = i < name.Length ? CharByteLookup[name[i]] : (byte)0;
+            if ((c & 0b0001) == 0b0001) result += 1UL;
+            if ((c & 0b0010) == 0b0010) result += 1UL << 1;
+            if ((c & 0b0100) == 0b0100) result += 1UL << 2;
+            if ((c & 0b1000) == 0b1000) result += 1UL << 3;
+            return result;
+        }
+        public static string ToName(this ulong value)
+        {
+            char[] result = new char[NameMaxCharLength];
+            byte v;
+            char c;
+            int resultIndex = 0;
+            // The first 60 bits are 5-bits per value; 
+            for (int i = 0; i < NameBitsWithFullBitLength; i += BitsPerNameValue)
+            {
+                v = (byte)((value >> LastFullLengthNameBitIndex - i) & NameValueBitMask);
+                c = ByteCharLookup[v];
+                result[resultIndex++] = c;
+            }
+            v = (byte)(value & NameRestBitMask);
+            c = ByteCharLookup[v];
+            result[resultIndex] = c;
+            // Strip any trailing 0-values (e.g. '.')
+            return new string(result).TrimEnd(ByteCharLookup[0]);
+        }
+    }
+<# }#>
+<# if (includeEosioModels) { #>
+	namespace Model.eosio
+	{
+		public class Asset
+		{
+			const string EnglishCultureName = "en-GB";
+			static readonly CultureInfo EnglishCulture = new CultureInfo(EnglishCultureName);
+			public Symbol Token { get; set; }
+			public UInt64 Balance { get; set; }
+			[Newtonsoft.Json.JsonIgnore]
+			public decimal BalanceDecimal { get => Balance / (decimal)Token.Factor; set => Balance = (ulong)(value * (decimal)Token.Factor); }
+			/// <remarks>
+			/// We use the F string format so there is only a decimal, no thousand separator.
+			/// </remarks>
+			public override string ToString() => $"{BalanceDecimal.ToString($"F{Token.precision}", EnglishCulture)} {Token.name}";
+			public Asset() { } // Empty constructor for serializing
+			public static implicit operator Asset(string value)
+			{
+				Asset result = new Asset();
+				string[] parts = value.Split(' ');
+				if (parts.Length != 2) throw new ArgumentException($"Cannot parse '{value}' as a valid token balance", nameof(value));
+				string[] valueParts = parts[0].Split('.');
+				result.Token = new Symbol(
+					name: parts[1], 
+					precision: (byte)(valueParts.Length == 2 ? valueParts[1].Length : 0)
+				);
+				if (decimal.TryParse(parts[0], NumberStyles.AllowDecimalPoint, EnglishCulture, out decimal balance)) result.BalanceDecimal = balance;
+				else throw new ArgumentException($"Unable to parse '{parts[0]}' as a valid decimal");
+				return result;
+			}
+		}		
+        public class Name
+        {
+            ulong _Value;
+            string _Name;
+            public ulong Value 
+            { 
+                get => _Value; 
+                set 
+                {
+                    if(value != _Value)
+                    {
+                        _Value = value;
+                        _Name = value.ToName();
+                    }
+                } 
+            }
+            public string AsString { 
+                get => _Name;
+                set
+                {
+                    if(value != _Name)
+                    {
+                        _Name = value;
+                        _Value = AsString.NameToLong();
+                    }
+                }
+            }
+            public Name(string value)
+            {
+                AsString = value;
+            }
+            public Name(ulong value)
+            {
+                Value = value;
+            }
+            public static implicit operator ulong(Name value) => value.Value;
+            public static implicit operator string (Name value) => value.AsString;
+            public static explicit operator Name(ulong value) => new Name(value);
+            public static explicit operator Name(string value) => new Name(value);
+            public override string ToString() => AsString;
+        }        
+        public class Symbol
+        {
+	        const char Separator = ',';
+	        const int FixedNameByteLength = 7;
+            public byte precision { get; set; }
+            public string name { get; set; }
+	        /// <remarks>
+	        /// <see cref="System.Math.Pow">System.Math.Pow(10, 0)</see> returns 1, 
+	        /// otherwise, this should have been written with a <see cref="System.Math.Max"/>
+	        /// </remarks>
+	        [Newtonsoft.Json.JsonIgnore]
+	        public double Factor { get => System.Math.Pow(10, precision); }
+	        public Symbol() { }
+	        public Symbol(string name, byte precision) {
+		        this.name = name;
+		        this.precision = precision;
+	        }
+	        public static explicit operator Symbol(string value)
+            {
+		        string[] parts = value.Split(Separator);
+		        if (parts.Length != 2) throw new System.ArgumentException($"Symbol should be precision, followed by name, separated by '{Separator}'", nameof(value));
+		        else if (!byte.TryParse(parts[0], out byte precision)) throw new System.ArgumentException($"Can't parse '{parts[0]}' as precision", nameof(value));
+		        else return new Symbol(parts[1], precision);
+	        }
+	        public override string ToString() => $"{precision}{Separator}{name}";
+        }
+	} 
+<# } #>
+}

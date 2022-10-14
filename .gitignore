@@ -1,0 +1,6 @@
+# Visual Studio/.NET files
+.vs/
+obj/
+bin/
+packages/
+*.user
