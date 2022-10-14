@@ -14,14 +14,13 @@ namespace Abi2CSharp
     class Program
     {
         const int RecordsPerRequest = 100;
-        const int BlocksPerDay = 2 * 60 * 60 * 24;
         const string EosioContractName = "eosio";
         const string SetAbiActionName = "setabi";
         const string ContractActionSeparator = ":";
         public static Dictionary<string, Dictionary<uint, byte[]>> ExternalABIs = new Dictionary<string, Dictionary<uint, byte[]>>();
         #region Simple Type Mapping
         public static Dictionary<string, string> AbiTypeMapping = new Dictionary<string, string> {
-            { "name", "Model.eosio.Name"},//"ulong" },
+            { "name", "Model.eosio.Name"},
             { "asset", "Model.eosio.Asset" },
             { "symbol", "Model.eosio.Symbol" },
             { "uint64", "ulong" },
@@ -37,15 +36,6 @@ namespace Abi2CSharp
         #endregion
         static async Task Main(string[] args)
         {
-            /*
-            var cfg = JsonConvert.DeserializeObject<Contracts.atomicmarket.Responses.config>(@"
-{""version"":""1.3.3"",""sale_counter"":0,""auction_counter"":0,""minimum_bid_increase"":""0.10000000000000001"",""minimum_auction_duration"":120,""maximum_auction_duration"":2592000,""auction_reset_duration"":120,""supported_tokens"":[{""token_contract"":""eosio.token"",""token_symbol"":""8,WAX""}],""supported_symbol_pairs"":[{""listing_symbol"":""2,USD"",""settlement_symbol"":""8,WAX"",""delphi_pair_name"":""waxpusd"",""invert_delphi_pair"":0}],""maker_market_fee"":""0.01000000000000000"",""taker_market_fee"":""0.01000000000000000"",""atomicassets_account"":""atomicassets"",""delphioracle_account"":""delphioracle""}
-");
-            return;
-            await Contracts.atomicmarket.Test();
-            */
-            //await Contracts.atomicmarket.Test();
-            //return;
             if ((args?.Length ?? 0) == 0)
             {
                 Console.WriteLine("Please speicfy the contract you want to generate code for. Optionally, also specify the block, and the classname to export.");
@@ -178,6 +168,11 @@ namespace Abi2CSharp
                 var codeText = cg.TransformText();
                 Console.WriteLine(codeText);
                 File.WriteAllText($"{exportName}.cs", codeText);
+                Console.WriteLine($"Generated code written to {exportName}.cs");
+                if (AutoMappedConfig.includeEosSharpTest)
+                {
+                    Console.WriteLine($"Note: since you enabled {nameof(AutoMappedConfig.includeEosSharpTest)}, when using the generated file, you need to add a reference to the EosSharp project.");
+                }
             }
         }
         public static async Task<Model.ABI.Response> GetAbi(string contractName, uint blockNumber)
