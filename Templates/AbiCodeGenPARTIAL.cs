@@ -12,7 +12,9 @@ namespace Abi2CSharp.Templates
         bool includeEosioModels;
         bool includeEosSharpTest;
         bool includeExtensions;
-        public AbiCodeGen(string contractName, string exportName, List<Model.ABI.Action> actions, List<Model.ABI.Table> tables, Dictionary<string, Dictionary<string, string>> types, bool includeEosioModels, bool includeEosSharpTest, bool includeExtensions)
+        string api;
+        string chainId;
+        public AbiCodeGen(string contractName, string exportName, List<Model.ABI.Action> actions, List<Model.ABI.Table> tables, Dictionary<string, Dictionary<string, string>> types, bool includeEosioModels, bool includeEosSharpTest, bool includeExtensions, string api, string chainId)
         {
             this.contractName = contractName;
             this.exportName = exportName;
@@ -22,6 +24,8 @@ namespace Abi2CSharp.Templates
             this.includeEosioModels = includeEosioModels;
             this.includeEosSharpTest = includeEosSharpTest;
             this.includeExtensions = includeExtensions;
+            this.api = api;
+            this.chainId = chainId;
         }
     }
 }

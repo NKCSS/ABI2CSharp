@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Abi2CSharp.Extensions
+﻿namespace Abi2CSharp.Extensions
 {
     public static class HexExtensions
     {

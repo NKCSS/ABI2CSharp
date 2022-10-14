@@ -15,6 +15,7 @@ using EosSharp;
 using EosSharp.Core;
 using EosSharp.Core.Api.v1;
 using System.Net.Http;
+using System.Linq;
 <# } #>
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -93,6 +94,9 @@ namespace AlterMe
 <# if (includeExtensions) { #>
     public static class Extensions
     {
+        const char NULL = '\0';
+        const int BitsPerByte = 8;
+        const int BytesPer256Bits = 256 / BitsPerByte;
         #region Name-based constants
         const int NameMaxCharLength = 13;
         /// <summary>
@@ -135,7 +139,6 @@ namespace AlterMe
         #endregion
         static Dictionary<char, byte> CharByteLookup;
         static Dictionary<byte, char> ByteCharLookup;
-        static Dictionary<string, byte> HexLookup;
         static Extensions()
         {
             CharByteLookup = new Dictionary<char, byte>();
@@ -153,16 +156,26 @@ namespace AlterMe
                 CharByteLookup.Add(c, (byte)((byte)c - offset));
                 ByteCharLookup.Add((byte)((byte)c - offset), c);
             }
-            HexLookup = new Dictionary<string, byte>(byte.MaxValue);
-            string hex;
-            for (int i = byte.MinValue; i <= byte.MaxValue; ++i)
+        }
+        public static string ReadEosioString(this BinaryReader br) => System.Text.Encoding.UTF8.GetString(br.ReadBytes(br.DecodeInt32()));
+        public static string ToName(this ulong value)
+        {
+            char[] result = new char[NameMaxCharLength];
+            byte v;
+            char c;
+            int resultIndex = 0;
+            // The first 60 bits are 5-bits per value; 
+            for (int i = 0; i < NameBitsWithFullBitLength; i += BitsPerNameValue)
             {
-                hex = i.ToString("x2");
-                HexLookup.Add(hex, (byte)i);
-                // Add uppercase variants too, just to be sure
-                hex = hex.ToUpperInvariant();
-                if (!HexLookup.ContainsKey(hex)) HexLookup.Add(hex, (byte)i);
+                v = (byte)((value >> LastFullLengthNameBitIndex - i) & NameValueBitMask);
+                c = ByteCharLookup[v];
+                result[resultIndex++] = c;
             }
+            v = (byte)(value & NameRestBitMask);
+            c = ByteCharLookup[v];
+            result[resultIndex] = c;
+            // Strip any trailing 0-values (e.g. '.')
+            return new string(result).TrimEnd(ByteCharLookup[0]);
         }
         public static ulong NameToLong(this string name)
         {
@@ -188,24 +201,83 @@ namespace AlterMe
             if ((c & 0b1000) == 0b1000) result += 1UL << 3;
             return result;
         }
-        public static string ToName(this ulong value)
+    }
+    public static class VariableLengthInteger
+    {
+        const int BitsPerByte = 8;
+        const int DataBits = BitsPerByte - 1;
+        const int DataBitMask = (1 << DataBits) - 1;
+        const int ContinuationBit = 1 << DataBits;
+        public static void EncodeInt32(this BinaryWriter writer, int value)
         {
-            char[] result = new char[NameMaxCharLength];
-            byte v;
-            char c;
-            int resultIndex = 0;
-            // The first 60 bits are 5-bits per value; 
-            for (int i = 0; i < NameBitsWithFullBitLength; i += BitsPerNameValue)
+            if (writer == null)
+                throw new ArgumentNullException(nameof(writer));
+            if (value < 0)
+                throw new ArgumentOutOfRangeException(nameof(value), value, $"{nameof(value)} must be 0 or greater");
+            foreach(byte val in value.EncodeInt32())
+                writer.Write(val);
+        }
+        public static IEnumerable<byte> EncodeInt32(this uint value)
+        {
+            do
             {
-                v = (byte)((value >> LastFullLengthNameBitIndex - i) & NameValueBitMask);
-                c = ByteCharLookup[v];
-                result[resultIndex++] = c;
+                // Grab the lowest 7-bits of the value
+                byte lower7bits = (byte)(value & DataBitMask);
+                // Then shift the value by 7 and check if there is any value left.
+                value >>= DataBits;
+                if (value > 0) // If anything remains, ensure the continuation bit is set by OR-ing with 10000000 (1 + 7 bits from the data)
+                    lower7bits |= ContinuationBit;
+                yield return lower7bits;
+            } while (value > 0);
+        }
+        public static IEnumerable<byte> EncodeInt32(this int value)
+        {
+            if (value < 0) throw new ArgumentOutOfRangeException(nameof(value), value, $"{nameof(value)} must be 0 or greater");
+            foreach(var b in EncodeInt32((uint)value)) 
+                yield return b;
+        }
+        public static int DecodeInt32(this BinaryReader reader)
+        {
+            if (reader == null) throw new ArgumentNullException(nameof(reader));
+            bool more = true;
+            int value = 0, shift = 0;
+            while (more)
+            {
+                byte lower7bits = reader.ReadByte();
+                more = (lower7bits & ContinuationBit) != 0;
+                value |= (lower7bits & DataBitMask) << shift;
+                shift += DataBits;
             }
-            v = (byte)(value & NameRestBitMask);
-            c = ByteCharLookup[v];
-            result[resultIndex] = c;
-            // Strip any trailing 0-values (e.g. '.')
-            return new string(result).TrimEnd(ByteCharLookup[0]);
+            return value;
+        }
+        public static int DecodeInt32(this IEnumerable<byte> bytes, bool breakOnNoMore = false)
+        {
+            if (bytes == null) throw new ArgumentNullException(nameof(bytes));
+            bool more = true;
+            int value = 0, shift = 0;
+            foreach(byte lower7bits in bytes)
+            {
+                more = (lower7bits & ContinuationBit) != 0;
+                value |= (lower7bits & DataBitMask) << shift;
+                shift += DataBits;
+                if (breakOnNoMore && !more) break;
+            }
+            if (more) throw new ArgumentException("Last byte still had the 'more' flag set!", nameof(bytes));
+            return value;
+        }
+        public static int DecodeInt32(this MemoryStream ms)
+        {
+            if (ms == null) throw new ArgumentNullException(nameof(ms));
+            bool more = true;
+            int value = 0, shift = 0;
+            while (more)
+            {
+                byte lower7bits = (byte)ms.ReadByte();
+                more = (lower7bits & ContinuationBit) != 0;
+                value |= (lower7bits & DataBitMask) << shift;
+                shift += DataBits;
+            }
+            return value;
         }
     }
 <# }#>
@@ -308,5 +380,31 @@ namespace AlterMe
 	        public override string ToString() => $"{precision}{Separator}{name}";
         }
 	} 
-<# } #>
+<# }
+if (includeEosSharpTest)
+{ #>
+    public static class Test
+    {
+        public static async Task Run()
+        {
+            var api = new EosApi(new EosConfigurator()
+            {
+                SignProvider = null,
+                HttpEndpoint = "<#= api #>",
+                ChainId = "<#= chainId #>"
+            }, new HttpHandler());
+            var result = await api.GetTableRows<Contracts.<#= getSafeName(exportName, "c_") #>.Responses.<#= getSafeName(tables[0].name, "c_") #>>(new GetTableRowsRequest()
+            {
+                json = true,
+                code = Contracts.<#= getSafeName(exportName, "c_") #>.contract,
+                scope = Contracts.<#= getSafeName(exportName, "c_") #>.contract,
+                table = Contracts.<#= getSafeName(exportName, "c_") #>.Tables.<#= getSafeName(tables[0].name, "c_") #>,
+                reverse = false,
+                show_payer = false,
+            });
+            Console.WriteLine(Newtonsoft.Json.JsonConvert.SerializeObject(result.rows.FirstOrDefault()));
+        }
+    }
+<# }
+#>
 }

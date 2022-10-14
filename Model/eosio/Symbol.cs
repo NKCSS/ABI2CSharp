@@ -1,13 +1,8 @@
-﻿using Abi2CSharp.Extensions;
-using System.Collections.Generic;
-using System.IO;
-
-namespace Abi2CSharp.Model.eosio
+﻿namespace Abi2CSharp.Model.eosio
 {
     public class Symbol
     {
 		const char Separator = ',';
-		const int FixedNameByteLength = 7;
         public byte precision { get; set; }
         public string name { get; set; }
 		/// <remarks>

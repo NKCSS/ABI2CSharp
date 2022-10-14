@@ -13,11 +13,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\EosSharp.Core\EosSharp.Core.csproj" />
-    <ProjectReference Include="..\EosSharp\EosSharp.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Update="Templates\AbiCodeGen.tt">
       <Generator>TextTemplatingFilePreprocessor</Generator>
       <LastGenOutput>AbiCodeGen.cs</LastGenOutput>

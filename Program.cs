@@ -171,7 +171,9 @@ namespace Abi2CSharp
                     types: customTypeMappings,
                     includeEosioModels: AutoMappedConfig.includeEosioModels,
                     includeEosSharpTest: AutoMappedConfig.includeEosSharpTest,
-                    includeExtensions: AutoMappedConfig.includeExtensions
+                    includeExtensions: AutoMappedConfig.includeExtensions,
+                    api: AutoMappedConfig.api,
+                    chainId: AutoMappedConfig.chainId
                 );
                 var codeText = cg.TransformText();
                 Console.WriteLine(codeText);
