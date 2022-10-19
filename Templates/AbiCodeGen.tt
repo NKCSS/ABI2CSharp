@@ -63,9 +63,19 @@ namespace AlterMe
             }
             public static class Types
             {
-<# foreach (var type in types.Keys) { #>
+<# foreach (string i in VariantInterfaces) { #>
+                public interface <#= i #> { }
+<# } #>
+<# foreach (var type in types.Keys) { 
+    if (variantUsageLookup.TryGetValue(type, out var interfaces))
+    { #>
+                public class <#= getSafeName(type, "t_") #> : <#= string.Join(", ", interfaces) #> {
+<#  }
+    else
+    { #>
                 public class <#= getSafeName(type, "t_") #> {
-<#  foreach (var field in types[type])
+<#  }
+foreach (var field in types[type])
     { #>
                     public <#= getSafeName(field.Value, "t_") #> <#= field.Key #>  { get; set; }
 <#  }
@@ -96,7 +106,13 @@ namespace AlterMe
     {
         const char NULL = '\0';
         const int BitsPerByte = 8;
-        const int BytesPer256Bits = 256 / BitsPerByte;
+        const int BytesPer256Bits = 256 / BitsPerByte;        
+        const int Zero = (int)'0';
+        const int HexAFOffset = 10;
+        const int UpperCaseA = (int)'A';
+        const int UpperCaseAOffset = UpperCaseA - HexAFOffset;
+        const int LowerCaseA = (int)'a';
+        const int LowerCaseAOffset = LowerCaseA - HexAFOffset;
         #region Name-based constants
         const int NameMaxCharLength = 13;
         /// <summary>
@@ -200,6 +216,69 @@ namespace AlterMe
             if ((c & 0b0100) == 0b0100) result += 1UL << 2;
             if ((c & 0b1000) == 0b1000) result += 1UL << 3;
             return result;
+        }
+        public static int GetHexVal(this char hex)
+        {
+            int val = (int)hex;
+            if (val < UpperCaseA)
+                return val - Zero;
+            else if (val < LowerCaseA)
+                return val - UpperCaseAOffset;
+            return
+                val - LowerCaseAOffset;
+        }
+        public static byte[] ToByteArrayFastest(this string hex)
+        {
+            if (hex.Length % 2 == 1)
+                throw new Exception("The binary key cannot have an odd number of digits");
+            int byteCount = hex.Length >> 1;
+
+            byte[] arr = new byte[byteCount];
+
+            for (int i = 0; i < byteCount; ++i)
+            {
+                arr[i] = (byte)((hex[i << 1].GetHexVal() << 4) + hex[(i << 1) + 1].GetHexVal());
+            }
+
+            return arr;
+        }
+        public static string ToHexUpper(this byte[] value)
+        {
+            char[] result = new char[value.Length * 2];
+            int index = 0;
+            byte b;
+            for (int ix = 0; ix < result.Length; ix += 2)
+            {
+                b = value[index++];
+                result[ix] = GetHexUpper(b / 16);
+                result[ix + 1] = GetHexUpper(b % 16);
+            }
+            return new string(result);
+        }
+        public static string ToHexLower(this byte[] value)
+        {
+            char[] result = new char[value.Length * 2];
+            int index = 0;
+            byte b;
+            for (int ix = 0; ix < result.Length; ix += 2)
+            {
+                b = value[index++];
+                result[ix] = GetHexLower(b / 16);
+                result[ix + 1] = GetHexLower(b % 16);
+            }
+            return new string(result);
+        }
+        static char GetHexUpper(int i)
+        {
+            if (i < 0 || i > 15) throw new ArgumentException("Value must be between 0 and 15");
+            else if (i < 10) return (char)(i + '0');
+            return (char)(i - 10 + 'A');
+        }
+        static char GetHexLower(int i)
+        {
+            if (i < 0 || i > 15) throw new ArgumentException("Value must be between 0 and 15");
+            else if (i < 10) return (char)(i + '0');
+            return (char)(i - 10 + 'a');
         }
     }
     public static class VariableLengthInteger
@@ -378,6 +457,42 @@ namespace AlterMe
 		        else return new Symbol(parts[1], precision);
 	        }
 	        public override string ToString() => $"{precision}{Separator}{name}";
+        }        
+        public class CheckSum256
+        {
+            const int BitsPerByte = 8;
+            const int ExpectedLength = 256 / BitsPerByte;
+            byte[] _Raw;
+            string _AsString;
+            public byte[] Raw
+            {
+                get => _Raw;
+                set
+                {
+                    _Raw = value;
+                    _AsString = value.ToHexLower();
+                }
+            }
+            public string AsString
+            {
+                get => _AsString;
+                set
+                {
+                    _AsString = value;
+                    _Raw = value.ToByteArrayFastest();
+                }
+            }
+            public CheckSum256(string value)
+            {
+                AsString = value;
+            }
+            public static explicit operator CheckSum256(string value)
+            {
+                int valueLength = value?.Length ?? 0;
+                if (valueLength != ExpectedLength) throw new System.ArgumentException($"A {nameof(CheckSum256)} should be {ExpectedLength} bytes in length. Supplied value byte length: {valueLength}", nameof(value));
+                else return new CheckSum256(value);
+            }
+            public override string ToString() => AsString;
         }
 	} 
 <# }

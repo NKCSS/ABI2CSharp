@@ -23,6 +23,7 @@ namespace Abi2CSharp
             { "name", "Model.eosio.Name"},
             { "asset", "Model.eosio.Asset" },
             { "symbol", "Model.eosio.Symbol" },
+            { "checksum256", "Model.eosio.CheckSum256" },
             { "uint64", "ulong" },
             { "uint32", "uint" },
             { "uint16", "ushort" },
@@ -112,16 +113,29 @@ namespace Abi2CSharp
                     }
                     return null;
                 };
+                Func<Model.ABI.Struct, Dictionary<string, string>> mapTypes = (s) =>
+                {
+                    var result = new Dictionary<string, string>();
+                    string t, mt;
+                    bool nullable;
+                    foreach (var field in s.fields)
+                    {
+                        t = field.type;
+                        nullable = t.EndsWith('?') || t.EndsWith('$');
+                        if (nullable) t = t.Substring(0, t.Length - 1);
+                        bool isArray = t.EndsWith("[]");
+                        mt = AbiTypeMapping.TryGetValue(isArray ? t.Substring(0, t.Length - 2) : t, out string mappedType) ? $"{mappedType}{(isArray ? "[]" : string.Empty)}" : t;
+                        if (nullable && !isArray) mt += "?";
+                        result.Add(field.name, mt);
+                    }
+                    return result;
+                };
                 Func<string, Dictionary<string, string>> getFields = (typeName) => {
                     var result = new Dictionary<string, string>();
                     var extract = getStruct(typeName);
                     if (extract != null)
                     {
-                        foreach (var field in extract.fields)
-                        {
-                            bool isArray = field.type.EndsWith("[]");
-                            result.Add(field.name, (AbiTypeMapping.TryGetValue(isArray ? field.type.Substring(0, field.type.Length - 2) : field.type, out string mappedType) ? $"{mappedType}{(isArray ? "[]" : string.Empty)}" : field.type));
-                        }
+                        result = mapTypes(extract);
                     }
                     else
                     {
@@ -131,16 +145,30 @@ namespace Abi2CSharp
                 };
                 Dictionary<string, Dictionary<string, string>> customTypeMappings = new Dictionary<string, Dictionary<string, string>>();
                 string CustomTypePrefix = $"Model.{exportName}";
+                Dictionary<string, List<string>> VariantUsageLookup = new Dictionary<string, List<string>>();
+                string interfaceName;
+                foreach (var variant in abi.variants)
+                {
+                    interfaceName = $"I{variant.name}";
+                    AbiTypeMapping.Add(variant.name, interfaceName);
+                    foreach (var type in variant.types)
+                    {
+                        if (!VariantUsageLookup.TryGetValue(type, out var interfaces))
+                        {
+                            interfaces = new List<string>();
+                            VariantUsageLookup.Add(type, interfaces);
+                        }
+                        interfaces.Add(interfaceName);
+                    }
+                }
+                foreach(var type in abi.types)
+                {
+                    AbiTypeMapping.Add(type.new_type_name, AbiTypeMapping.TryGetValue(type.type, out string mappedName) ? mappedName : type.type);
+                }
                 foreach (var type in abi.structs)
                 {
                     Console.WriteLine($"TYPE {type.name}: {JsonConvert.SerializeObject(type.fields)}");
-                    var fields = new Dictionary<string, string>();
-                    foreach (var field in type.fields)
-                    {
-                        bool isArray = field.type.EndsWith("[]");
-                        fields.Add(field.name, (AbiTypeMapping.TryGetValue(isArray ? field.type.Substring(0, field.type.Length - 2) : field.type, out string mappedType) ? $"{mappedType}{(isArray ? "[]" : string.Empty)}" : field.type));
-                    }
-                    customTypeMappings.Add(type.name, fields);
+                    customTypeMappings.Add(type.name, mapTypes(type));
                 }
                 foreach (var tbl in abi.tables)
                 {
@@ -163,7 +191,8 @@ namespace Abi2CSharp
                     includeEosSharpTest: AutoMappedConfig.includeEosSharpTest,
                     includeExtensions: AutoMappedConfig.includeExtensions,
                     api: AutoMappedConfig.api,
-                    chainId: AutoMappedConfig.chainId
+                    chainId: AutoMappedConfig.chainId,
+                    variantUsageLookup: VariantUsageLookup
                 );
                 var codeText = cg.TransformText();
                 Console.WriteLine(codeText);
@@ -223,7 +252,7 @@ namespace Abi2CSharp
                 foreach (var x in data.actions)
                 {
                     //NOTE: Technically, there can be two ABI updates inside the same block. We are not going to account for that now, so we use this overwrite flow to just keep the latest ABI for the block.
-                    abis[x.block_num] = StringToByteArrayFastest(x.act.data.abi);
+                    abis[x.block_num] = x.act.data.abi.ToByteArrayFastest();
                 }
                 Console.WriteLine($"ABI Count: {abis.Count}");
                 Thread.Sleep(5000);
@@ -231,21 +260,6 @@ namespace Abi2CSharp
             while (data.total.value > retrieved);
             File.WriteAllText(Path.Combine(AutoMappedConfig.abiFolder, $"{accountName}{AutoMappedConfig.abiFileSeparator}{AutoMappedConfig.abiFileSuffix}"), JsonConvert.SerializeObject(abis));
             return abis;
-        }
-        static byte[] StringToByteArrayFastest(string hex)
-        {
-            if (hex.Length % 2 == 1)
-                throw new Exception("The binary key cannot have an odd number of digits");
-            int byteCount = hex.Length >> 1;
-
-            byte[] arr = new byte[byteCount];
-
-            for (int i = 0; i < byteCount; ++i)
-            {
-                arr[i] = (byte)((hex[i << 1].GetHexVal() << 4) + hex[(i << 1) + 1].GetHexVal());
-            }
-
-            return arr;
         }
         internal static void WarningLog(uint blockNumber, string msg, bool print = false)
         {

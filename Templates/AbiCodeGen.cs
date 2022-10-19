@@ -191,42 +191,88 @@ Func<string, string, string> getSafeName = (name, prefix) => {
             this.Write("            }\r\n            public static class Types\r\n            {\r\n");
             
             #line 66 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
+ foreach (string i in VariantInterfaces) { 
+            
+            #line default
+            #line hidden
+            this.Write("                public interface ");
+            
+            #line 67 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(i));
+            
+            #line default
+            #line hidden
+            this.Write(" { }\r\n");
+            
+            #line 68 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
+ } 
+            
+            #line default
+            #line hidden
+            
+            #line 69 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
  foreach (var type in types.Keys) { 
+    if (variantUsageLookup.TryGetValue(type, out var interfaces))
+    { 
             
             #line default
             #line hidden
             this.Write("                public class ");
             
-            #line 67 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
+            #line 72 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(getSafeName(type, "t_")));
+            
+            #line default
+            #line hidden
+            this.Write(" : ");
+            
+            #line 72 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(string.Join(", ", interfaces)));
+            
+            #line default
+            #line hidden
+            this.Write(" {\r\n");
+            
+            #line 73 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
+  }
+    else
+    { 
+            
+            #line default
+            #line hidden
+            this.Write("                public class ");
+            
+            #line 76 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(getSafeName(type, "t_")));
             
             #line default
             #line hidden
             this.Write(" {\r\n");
             
-            #line 68 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
-  foreach (var field in types[type])
+            #line 77 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
+  }
+foreach (var field in types[type])
     { 
             
             #line default
             #line hidden
             this.Write("                    public ");
             
-            #line 70 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
+            #line 80 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(getSafeName(field.Value, "t_")));
             
             #line default
             #line hidden
             this.Write(" ");
             
-            #line 70 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
+            #line 80 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(field.Key));
             
             #line default
             #line hidden
             this.Write("  { get; set; }\r\n");
             
-            #line 71 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
+            #line 81 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
   }
 
             
@@ -234,189 +280,221 @@ Func<string, string, string> getSafeName = (name, prefix) => {
             #line hidden
             this.Write("                }\r\n");
             
-            #line 74 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
+            #line 84 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
 } 
             
             #line default
             #line hidden
             this.Write("            }\r\n            public static class Requests\r\n            {\r\n");
             
-            #line 78 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
+            #line 88 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
  foreach (var action in actions) { 
             
             #line default
             #line hidden
             this.Write("                public class ");
             
-            #line 79 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
+            #line 89 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(getSafeName(action.name, "t_")));
             
             #line default
             #line hidden
             this.Write(" : Types.");
             
-            #line 79 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
+            #line 89 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(getSafeName(action.type, "t_")));
             
             #line default
             #line hidden
             this.Write("\r\n                {\r\n                }\r\n");
             
-            #line 82 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
+            #line 92 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
 } 
             
             #line default
             #line hidden
             this.Write("            }\r\n            public static class Responses\r\n            {\r\n");
             
-            #line 86 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
+            #line 96 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
  foreach (var table in tables) { 
             
             #line default
             #line hidden
             this.Write("                public class ");
             
-            #line 87 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
+            #line 97 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(getSafeName(table.name, "t_")));
             
             #line default
             #line hidden
             this.Write(" : Types.");
             
-            #line 87 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
+            #line 97 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(getSafeName(table.type, "t_")));
             
             #line default
             #line hidden
             this.Write("\r\n                {\r\n                }\r\n");
             
-            #line 90 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
+            #line 100 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
 } 
             
             #line default
             #line hidden
             this.Write("            }\r\n        }\r\n    }\r\n");
             
-            #line 94 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
+            #line 104 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
  if (includeExtensions) { 
             
             #line default
             #line hidden
             this.Write("    public static class Extensions\r\n    {\r\n        const char NULL = \'\\0\';\r\n     " +
                     "   const int BitsPerByte = 8;\r\n        const int BytesPer256Bits = 256 / BitsPer" +
-                    "Byte;\r\n        #region Name-based constants\r\n        const int NameMaxCharLength" +
-                    " = 13;\r\n        /// <summary>\r\n        /// The amount of bits an Antelope name i" +
-                    "s encoded into.\r\n        /// </summary>\r\n        const int NameBitLength = 64;\r\n" +
-                    "        /// <summary>\r\n        /// The amount of bits we can use per character.\r" +
-                    "\n        /// </summary>\r\n        const int BitsPerNameValue = 5;\r\n        /// <s" +
-                    "ummary>\r\n        /// The amount of charcters that can use the full bit length we" +
-                    " need (12)\r\n        /// </summary>\r\n        const int NameFullBitCharCount = Nam" +
-                    "eBitLength / BitsPerNameValue;\r\n        /// <summary>\r\n        /// The amount of" +
-                    " bits that can have the full-length (60 in our case)\r\n        /// </summary>\r\n  " +
-                    "      const int NameBitsWithFullBitLength = NameFullBitCharCount * BitsPerNameVa" +
-                    "lue;\r\n        /// <summary>\r\n        /// The amount of bits that remain for the " +
-                    "last value (4)\r\n        /// </summary>\r\n        const int NameRestBits = NameBit" +
-                    "Length - NameBitsWithFullBitLength;\r\n        /// <summary>\r\n        /// The last" +
-                    " bit index that has <see cref=\"BitsPerNameValue\"/> bits per encoded character.\r\n" +
-                    "        /// </summary>\r\n        /// <remarks>\r\n        /// Indexes are 0-based, " +
-                    "so we take the amount of bits that are full-length values and substract 1.\r\n    " +
-                    "    /// </remarks>\r\n        const int LastFullLengthNameBitIndex = NameBitsWithF" +
-                    "ullBitLength - 1;\r\n        /// <summary>\r\n        /// The bitmask we use to extr" +
-                    "act the bits from the value. We shift by the bit length (e.g. overshoot), \r\n    " +
-                    "    /// then substract 1 to get a full set of binary 1 flags for our desired bit" +
-                    " length.\r\n        /// </summary>\r\n        const int NameValueBitMask = (1 << Bit" +
-                    "sPerNameValue) - 1;\r\n        /// <summary>\r\n        /// The bitmask we use to ex" +
-                    "tract the bits from the value. We shift by the bit length (e.g. overshoot), \r\n  " +
-                    "      /// then substract 1 to get a full set of binary 1 flags for our desired b" +
-                    "it length.\r\n        /// </summary>\r\n        const int NameRestBitMask = (1 << Na" +
-                    "meRestBits) - 1;\r\n        #endregion\r\n        static Dictionary<char, byte> Char" +
-                    "ByteLookup;\r\n        static Dictionary<byte, char> ByteCharLookup;\r\n        stat" +
-                    "ic Extensions()\r\n        {\r\n            CharByteLookup = new Dictionary<char, by" +
-                    "te>();\r\n            ByteCharLookup = new Dictionary<byte, char>();\r\n            " +
-                    "CharByteLookup.Add(\'.\', 0);\r\n            ByteCharLookup.Add(0, \'.\');\r\n          " +
-                    "  for (byte i = 1; i <= 5; ++i)\r\n            {\r\n                CharByteLookup.A" +
-                    "dd(i.ToString()[0], i);\r\n                ByteCharLookup.Add(i, i.ToString()[0]);" +
-                    "\r\n            }\r\n            byte offset = \'a\' - 6;\r\n            for (char c = \'" +
-                    "a\'; c <= \'z\'; ++c)\r\n            {\r\n                CharByteLookup.Add(c, (byte)(" +
-                    "(byte)c - offset));\r\n                ByteCharLookup.Add((byte)((byte)c - offset)" +
-                    ", c);\r\n            }\r\n        }\r\n        public static string ReadEosioString(th" +
-                    "is BinaryReader br) => System.Text.Encoding.UTF8.GetString(br.ReadBytes(br.Decod" +
-                    "eInt32()));\r\n        public static string ToName(this ulong value)\r\n        {\r\n " +
-                    "           char[] result = new char[NameMaxCharLength];\r\n            byte v;\r\n  " +
-                    "          char c;\r\n            int resultIndex = 0;\r\n            // The first 60" +
-                    " bits are 5-bits per value; \r\n            for (int i = 0; i < NameBitsWithFullBi" +
-                    "tLength; i += BitsPerNameValue)\r\n            {\r\n                v = (byte)((valu" +
-                    "e >> LastFullLengthNameBitIndex - i) & NameValueBitMask);\r\n                c = B" +
-                    "yteCharLookup[v];\r\n                result[resultIndex++] = c;\r\n            }\r\n  " +
-                    "          v = (byte)(value & NameRestBitMask);\r\n            c = ByteCharLookup[v" +
-                    "];\r\n            result[resultIndex] = c;\r\n            // Strip any trailing 0-va" +
-                    "lues (e.g. \'.\')\r\n            return new string(result).TrimEnd(ByteCharLookup[0]" +
-                    ");\r\n        }\r\n        public static ulong NameToLong(this string name)\r\n       " +
-                    " {\r\n            ulong result = 0L;\r\n            int bitIndex = 0, i;\r\n          " +
-                    "  byte c;\r\n            // Process the full-bit-length characters\r\n            fo" +
-                    "r (i = 0; i < NameFullBitCharCount; i++)\r\n            {\r\n                c = i <" +
-                    " name.Length ? CharByteLookup[name[i]] : (byte)0;\r\n                if ((c & 0b00" +
-                    "001) == 0b00001) result += 1UL << (59 - bitIndex);\r\n                if ((c & 0b0" +
-                    "0010) == 0b00010) result += 1UL << (60 - bitIndex);\r\n                if ((c & 0b" +
-                    "00100) == 0b00100) result += 1UL << (61 - bitIndex);\r\n                if ((c & 0" +
-                    "b01000) == 0b01000) result += 1UL << (62 - bitIndex);\r\n                if ((c & " +
-                    "0b10000) == 0b10000) result += 1UL << (63 - bitIndex);\r\n                bitIndex" +
-                    " += 5;\r\n            }\r\n            // Process the last 4 bits\r\n            c = i" +
-                    " < name.Length ? CharByteLookup[name[i]] : (byte)0;\r\n            if ((c & 0b0001" +
-                    ") == 0b0001) result += 1UL;\r\n            if ((c & 0b0010) == 0b0010) result += 1" +
-                    "UL << 1;\r\n            if ((c & 0b0100) == 0b0100) result += 1UL << 2;\r\n         " +
-                    "   if ((c & 0b1000) == 0b1000) result += 1UL << 3;\r\n            return result;\r\n" +
-                    "        }\r\n    }\r\n    public static class VariableLengthInteger\r\n    {\r\n        " +
-                    "const int BitsPerByte = 8;\r\n        const int DataBits = BitsPerByte - 1;\r\n     " +
-                    "   const int DataBitMask = (1 << DataBits) - 1;\r\n        const int ContinuationB" +
-                    "it = 1 << DataBits;\r\n        public static void EncodeInt32(this BinaryWriter wr" +
-                    "iter, int value)\r\n        {\r\n            if (writer == null)\r\n                th" +
-                    "row new ArgumentNullException(nameof(writer));\r\n            if (value < 0)\r\n    " +
-                    "            throw new ArgumentOutOfRangeException(nameof(value), value, $\"{nameo" +
-                    "f(value)} must be 0 or greater\");\r\n            foreach(byte val in value.EncodeI" +
-                    "nt32())\r\n                writer.Write(val);\r\n        }\r\n        public static IE" +
-                    "numerable<byte> EncodeInt32(this uint value)\r\n        {\r\n            do\r\n       " +
-                    "     {\r\n                // Grab the lowest 7-bits of the value\r\n                " +
-                    "byte lower7bits = (byte)(value & DataBitMask);\r\n                // Then shift th" +
-                    "e value by 7 and check if there is any value left.\r\n                value >>= Da" +
-                    "taBits;\r\n                if (value > 0) // If anything remains, ensure the conti" +
-                    "nuation bit is set by OR-ing with 10000000 (1 + 7 bits from the data)\r\n         " +
-                    "           lower7bits |= ContinuationBit;\r\n                yield return lower7bi" +
-                    "ts;\r\n            } while (value > 0);\r\n        }\r\n        public static IEnumera" +
-                    "ble<byte> EncodeInt32(this int value)\r\n        {\r\n            if (value < 0) thr" +
-                    "ow new ArgumentOutOfRangeException(nameof(value), value, $\"{nameof(value)} must " +
-                    "be 0 or greater\");\r\n            foreach(var b in EncodeInt32((uint)value)) \r\n   " +
-                    "             yield return b;\r\n        }\r\n        public static int DecodeInt32(t" +
-                    "his BinaryReader reader)\r\n        {\r\n            if (reader == null) throw new A" +
-                    "rgumentNullException(nameof(reader));\r\n            bool more = true;\r\n          " +
-                    "  int value = 0, shift = 0;\r\n            while (more)\r\n            {\r\n          " +
-                    "      byte lower7bits = reader.ReadByte();\r\n                more = (lower7bits &" +
-                    " ContinuationBit) != 0;\r\n                value |= (lower7bits & DataBitMask) << " +
-                    "shift;\r\n                shift += DataBits;\r\n            }\r\n            return va" +
-                    "lue;\r\n        }\r\n        public static int DecodeInt32(this IEnumerable<byte> by" +
-                    "tes, bool breakOnNoMore = false)\r\n        {\r\n            if (bytes == null) thro" +
-                    "w new ArgumentNullException(nameof(bytes));\r\n            bool more = true;\r\n    " +
-                    "        int value = 0, shift = 0;\r\n            foreach(byte lower7bits in bytes)" +
-                    "\r\n            {\r\n                more = (lower7bits & ContinuationBit) != 0;\r\n  " +
-                    "              value |= (lower7bits & DataBitMask) << shift;\r\n                shi" +
-                    "ft += DataBits;\r\n                if (breakOnNoMore && !more) break;\r\n           " +
-                    " }\r\n            if (more) throw new ArgumentException(\"Last byte still had the \'" +
-                    "more\' flag set!\", nameof(bytes));\r\n            return value;\r\n        }\r\n       " +
-                    " public static int DecodeInt32(this MemoryStream ms)\r\n        {\r\n            if " +
-                    "(ms == null) throw new ArgumentNullException(nameof(ms));\r\n            bool more" +
-                    " = true;\r\n            int value = 0, shift = 0;\r\n            while (more)\r\n     " +
-                    "       {\r\n                byte lower7bits = (byte)ms.ReadByte();\r\n              " +
-                    "  more = (lower7bits & ContinuationBit) != 0;\r\n                value |= (lower7b" +
-                    "its & DataBitMask) << shift;\r\n                shift += DataBits;\r\n            }\r" +
-                    "\n            return value;\r\n        }\r\n    }\r\n");
+                    "Byte;        \r\n        const int Zero = (int)\'0\';\r\n        const int HexAFOffset" +
+                    " = 10;\r\n        const int UpperCaseA = (int)\'A\';\r\n        const int UpperCaseAOf" +
+                    "fset = UpperCaseA - HexAFOffset;\r\n        const int LowerCaseA = (int)\'a\';\r\n    " +
+                    "    const int LowerCaseAOffset = LowerCaseA - HexAFOffset;\r\n        #region Name" +
+                    "-based constants\r\n        const int NameMaxCharLength = 13;\r\n        /// <summar" +
+                    "y>\r\n        /// The amount of bits an Antelope name is encoded into.\r\n        //" +
+                    "/ </summary>\r\n        const int NameBitLength = 64;\r\n        /// <summary>\r\n    " +
+                    "    /// The amount of bits we can use per character.\r\n        /// </summary>\r\n  " +
+                    "      const int BitsPerNameValue = 5;\r\n        /// <summary>\r\n        /// The am" +
+                    "ount of charcters that can use the full bit length we need (12)\r\n        /// </s" +
+                    "ummary>\r\n        const int NameFullBitCharCount = NameBitLength / BitsPerNameVal" +
+                    "ue;\r\n        /// <summary>\r\n        /// The amount of bits that can have the ful" +
+                    "l-length (60 in our case)\r\n        /// </summary>\r\n        const int NameBitsWit" +
+                    "hFullBitLength = NameFullBitCharCount * BitsPerNameValue;\r\n        /// <summary>" +
+                    "\r\n        /// The amount of bits that remain for the last value (4)\r\n        ///" +
+                    " </summary>\r\n        const int NameRestBits = NameBitLength - NameBitsWithFullBi" +
+                    "tLength;\r\n        /// <summary>\r\n        /// The last bit index that has <see cr" +
+                    "ef=\"BitsPerNameValue\"/> bits per encoded character.\r\n        /// </summary>\r\n   " +
+                    "     /// <remarks>\r\n        /// Indexes are 0-based, so we take the amount of bi" +
+                    "ts that are full-length values and substract 1.\r\n        /// </remarks>\r\n       " +
+                    " const int LastFullLengthNameBitIndex = NameBitsWithFullBitLength - 1;\r\n        " +
+                    "/// <summary>\r\n        /// The bitmask we use to extract the bits from the value" +
+                    ". We shift by the bit length (e.g. overshoot), \r\n        /// then substract 1 to" +
+                    " get a full set of binary 1 flags for our desired bit length.\r\n        /// </sum" +
+                    "mary>\r\n        const int NameValueBitMask = (1 << BitsPerNameValue) - 1;\r\n      " +
+                    "  /// <summary>\r\n        /// The bitmask we use to extract the bits from the val" +
+                    "ue. We shift by the bit length (e.g. overshoot), \r\n        /// then substract 1 " +
+                    "to get a full set of binary 1 flags for our desired bit length.\r\n        /// </s" +
+                    "ummary>\r\n        const int NameRestBitMask = (1 << NameRestBits) - 1;\r\n        #" +
+                    "endregion\r\n        static Dictionary<char, byte> CharByteLookup;\r\n        static" +
+                    " Dictionary<byte, char> ByteCharLookup;\r\n        static Extensions()\r\n        {\r" +
+                    "\n            CharByteLookup = new Dictionary<char, byte>();\r\n            ByteCha" +
+                    "rLookup = new Dictionary<byte, char>();\r\n            CharByteLookup.Add(\'.\', 0);" +
+                    "\r\n            ByteCharLookup.Add(0, \'.\');\r\n            for (byte i = 1; i <= 5; " +
+                    "++i)\r\n            {\r\n                CharByteLookup.Add(i.ToString()[0], i);\r\n  " +
+                    "              ByteCharLookup.Add(i, i.ToString()[0]);\r\n            }\r\n          " +
+                    "  byte offset = \'a\' - 6;\r\n            for (char c = \'a\'; c <= \'z\'; ++c)\r\n       " +
+                    "     {\r\n                CharByteLookup.Add(c, (byte)((byte)c - offset));\r\n      " +
+                    "          ByteCharLookup.Add((byte)((byte)c - offset), c);\r\n            }\r\n     " +
+                    "   }\r\n        public static string ReadEosioString(this BinaryReader br) => Syst" +
+                    "em.Text.Encoding.UTF8.GetString(br.ReadBytes(br.DecodeInt32()));\r\n        public" +
+                    " static string ToName(this ulong value)\r\n        {\r\n            char[] result = " +
+                    "new char[NameMaxCharLength];\r\n            byte v;\r\n            char c;\r\n        " +
+                    "    int resultIndex = 0;\r\n            // The first 60 bits are 5-bits per value;" +
+                    " \r\n            for (int i = 0; i < NameBitsWithFullBitLength; i += BitsPerNameVa" +
+                    "lue)\r\n            {\r\n                v = (byte)((value >> LastFullLengthNameBitI" +
+                    "ndex - i) & NameValueBitMask);\r\n                c = ByteCharLookup[v];\r\n        " +
+                    "        result[resultIndex++] = c;\r\n            }\r\n            v = (byte)(value " +
+                    "& NameRestBitMask);\r\n            c = ByteCharLookup[v];\r\n            result[resu" +
+                    "ltIndex] = c;\r\n            // Strip any trailing 0-values (e.g. \'.\')\r\n          " +
+                    "  return new string(result).TrimEnd(ByteCharLookup[0]);\r\n        }\r\n        publ" +
+                    "ic static ulong NameToLong(this string name)\r\n        {\r\n            ulong resul" +
+                    "t = 0L;\r\n            int bitIndex = 0, i;\r\n            byte c;\r\n            // P" +
+                    "rocess the full-bit-length characters\r\n            for (i = 0; i < NameFullBitCh" +
+                    "arCount; i++)\r\n            {\r\n                c = i < name.Length ? CharByteLook" +
+                    "up[name[i]] : (byte)0;\r\n                if ((c & 0b00001) == 0b00001) result += " +
+                    "1UL << (59 - bitIndex);\r\n                if ((c & 0b00010) == 0b00010) result +=" +
+                    " 1UL << (60 - bitIndex);\r\n                if ((c & 0b00100) == 0b00100) result +" +
+                    "= 1UL << (61 - bitIndex);\r\n                if ((c & 0b01000) == 0b01000) result " +
+                    "+= 1UL << (62 - bitIndex);\r\n                if ((c & 0b10000) == 0b10000) result" +
+                    " += 1UL << (63 - bitIndex);\r\n                bitIndex += 5;\r\n            }\r\n    " +
+                    "        // Process the last 4 bits\r\n            c = i < name.Length ? CharByteLo" +
+                    "okup[name[i]] : (byte)0;\r\n            if ((c & 0b0001) == 0b0001) result += 1UL;" +
+                    "\r\n            if ((c & 0b0010) == 0b0010) result += 1UL << 1;\r\n            if ((" +
+                    "c & 0b0100) == 0b0100) result += 1UL << 2;\r\n            if ((c & 0b1000) == 0b10" +
+                    "00) result += 1UL << 3;\r\n            return result;\r\n        }\r\n        public s" +
+                    "tatic int GetHexVal(this char hex)\r\n        {\r\n            int val = (int)hex;\r\n" +
+                    "            if (val < UpperCaseA)\r\n                return val - Zero;\r\n         " +
+                    "   else if (val < LowerCaseA)\r\n                return val - UpperCaseAOffset;\r\n " +
+                    "           return\r\n                val - LowerCaseAOffset;\r\n        }\r\n        p" +
+                    "ublic static byte[] ToByteArrayFastest(this string hex)\r\n        {\r\n            " +
+                    "if (hex.Length % 2 == 1)\r\n                throw new Exception(\"The binary key ca" +
+                    "nnot have an odd number of digits\");\r\n            int byteCount = hex.Length >> " +
+                    "1;\r\n\r\n            byte[] arr = new byte[byteCount];\r\n\r\n            for (int i = " +
+                    "0; i < byteCount; ++i)\r\n            {\r\n                arr[i] = (byte)((hex[i <<" +
+                    " 1].GetHexVal() << 4) + hex[(i << 1) + 1].GetHexVal());\r\n            }\r\n\r\n      " +
+                    "      return arr;\r\n        }\r\n        public static string ToHexUpper(this byte[" +
+                    "] value)\r\n        {\r\n            char[] result = new char[value.Length * 2];\r\n  " +
+                    "          int index = 0;\r\n            byte b;\r\n            for (int ix = 0; ix <" +
+                    " result.Length; ix += 2)\r\n            {\r\n                b = value[index++];\r\n  " +
+                    "              result[ix] = GetHexUpper(b / 16);\r\n                result[ix + 1] " +
+                    "= GetHexUpper(b % 16);\r\n            }\r\n            return new string(result);\r\n " +
+                    "       }\r\n        public static string ToHexLower(this byte[] value)\r\n        {\r" +
+                    "\n            char[] result = new char[value.Length * 2];\r\n            int index " +
+                    "= 0;\r\n            byte b;\r\n            for (int ix = 0; ix < result.Length; ix +" +
+                    "= 2)\r\n            {\r\n                b = value[index++];\r\n                result" +
+                    "[ix] = GetHexLower(b / 16);\r\n                result[ix + 1] = GetHexLower(b % 16" +
+                    ");\r\n            }\r\n            return new string(result);\r\n        }\r\n        st" +
+                    "atic char GetHexUpper(int i)\r\n        {\r\n            if (i < 0 || i > 15) throw " +
+                    "new ArgumentException(\"Value must be between 0 and 15\");\r\n            else if (i" +
+                    " < 10) return (char)(i + \'0\');\r\n            return (char)(i - 10 + \'A\');\r\n      " +
+                    "  }\r\n        static char GetHexLower(int i)\r\n        {\r\n            if (i < 0 ||" +
+                    " i > 15) throw new ArgumentException(\"Value must be between 0 and 15\");\r\n       " +
+                    "     else if (i < 10) return (char)(i + \'0\');\r\n            return (char)(i - 10 " +
+                    "+ \'a\');\r\n        }\r\n    }\r\n    public static class VariableLengthInteger\r\n    {\r" +
+                    "\n        const int BitsPerByte = 8;\r\n        const int DataBits = BitsPerByte - " +
+                    "1;\r\n        const int DataBitMask = (1 << DataBits) - 1;\r\n        const int Cont" +
+                    "inuationBit = 1 << DataBits;\r\n        public static void EncodeInt32(this Binary" +
+                    "Writer writer, int value)\r\n        {\r\n            if (writer == null)\r\n         " +
+                    "       throw new ArgumentNullException(nameof(writer));\r\n            if (value <" +
+                    " 0)\r\n                throw new ArgumentOutOfRangeException(nameof(value), value," +
+                    " $\"{nameof(value)} must be 0 or greater\");\r\n            foreach(byte val in valu" +
+                    "e.EncodeInt32())\r\n                writer.Write(val);\r\n        }\r\n        public " +
+                    "static IEnumerable<byte> EncodeInt32(this uint value)\r\n        {\r\n            do" +
+                    "\r\n            {\r\n                // Grab the lowest 7-bits of the value\r\n       " +
+                    "         byte lower7bits = (byte)(value & DataBitMask);\r\n                // Then" +
+                    " shift the value by 7 and check if there is any value left.\r\n                val" +
+                    "ue >>= DataBits;\r\n                if (value > 0) // If anything remains, ensure " +
+                    "the continuation bit is set by OR-ing with 10000000 (1 + 7 bits from the data)\r\n" +
+                    "                    lower7bits |= ContinuationBit;\r\n                yield return" +
+                    " lower7bits;\r\n            } while (value > 0);\r\n        }\r\n        public static" +
+                    " IEnumerable<byte> EncodeInt32(this int value)\r\n        {\r\n            if (value" +
+                    " < 0) throw new ArgumentOutOfRangeException(nameof(value), value, $\"{nameof(valu" +
+                    "e)} must be 0 or greater\");\r\n            foreach(var b in EncodeInt32((uint)valu" +
+                    "e)) \r\n                yield return b;\r\n        }\r\n        public static int Deco" +
+                    "deInt32(this BinaryReader reader)\r\n        {\r\n            if (reader == null) th" +
+                    "row new ArgumentNullException(nameof(reader));\r\n            bool more = true;\r\n " +
+                    "           int value = 0, shift = 0;\r\n            while (more)\r\n            {\r\n " +
+                    "               byte lower7bits = reader.ReadByte();\r\n                more = (low" +
+                    "er7bits & ContinuationBit) != 0;\r\n                value |= (lower7bits & DataBit" +
+                    "Mask) << shift;\r\n                shift += DataBits;\r\n            }\r\n            " +
+                    "return value;\r\n        }\r\n        public static int DecodeInt32(this IEnumerable" +
+                    "<byte> bytes, bool breakOnNoMore = false)\r\n        {\r\n            if (bytes == n" +
+                    "ull) throw new ArgumentNullException(nameof(bytes));\r\n            bool more = tr" +
+                    "ue;\r\n            int value = 0, shift = 0;\r\n            foreach(byte lower7bits " +
+                    "in bytes)\r\n            {\r\n                more = (lower7bits & ContinuationBit) " +
+                    "!= 0;\r\n                value |= (lower7bits & DataBitMask) << shift;\r\n          " +
+                    "      shift += DataBits;\r\n                if (breakOnNoMore && !more) break;\r\n  " +
+                    "          }\r\n            if (more) throw new ArgumentException(\"Last byte still " +
+                    "had the \'more\' flag set!\", nameof(bytes));\r\n            return value;\r\n        }" +
+                    "\r\n        public static int DecodeInt32(this MemoryStream ms)\r\n        {\r\n      " +
+                    "      if (ms == null) throw new ArgumentNullException(nameof(ms));\r\n            " +
+                    "bool more = true;\r\n            int value = 0, shift = 0;\r\n            while (mor" +
+                    "e)\r\n            {\r\n                byte lower7bits = (byte)ms.ReadByte();\r\n     " +
+                    "           more = (lower7bits & ContinuationBit) != 0;\r\n                value |=" +
+                    " (lower7bits & DataBitMask) << shift;\r\n                shift += DataBits;\r\n     " +
+                    "       }\r\n            return value;\r\n        }\r\n    }\r\n");
             
-            #line 283 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
+            #line 362 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
  }
             
             #line default
             #line hidden
             
-            #line 284 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
+            #line 363 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
  if (includeEosioModels) { 
             
             #line default
@@ -472,9 +550,26 @@ Func<string, string, string> getSafeName = (name, prefix) => {
                     " if (!byte.TryParse(parts[0], out byte precision)) throw new System.ArgumentExce" +
                     "ption($\"Can\'t parse \'{parts[0]}\' as precision\", nameof(value));\r\n\t\t        else " +
                     "return new Symbol(parts[1], precision);\r\n\t        }\r\n\t        public override st" +
-                    "ring ToString() => $\"{precision}{Separator}{name}\";\r\n        }\r\n\t} \r\n");
+                    "ring ToString() => $\"{precision}{Separator}{name}\";\r\n        }        \r\n        " +
+                    "public class CheckSum256\r\n        {\r\n            const int BitsPerByte = 8;\r\n   " +
+                    "         const int ExpectedLength = 256 / BitsPerByte;\r\n            byte[] _Raw;" +
+                    "\r\n            string _AsString;\r\n            public byte[] Raw\r\n            {\r\n " +
+                    "               get => _Raw;\r\n                set\r\n                {\r\n           " +
+                    "         _Raw = value;\r\n                    _AsString = value.ToHexLower();\r\n   " +
+                    "             }\r\n            }\r\n            public string AsString\r\n            {" +
+                    "\r\n                get => _AsString;\r\n                set\r\n                {\r\n   " +
+                    "                 _AsString = value;\r\n                    _Raw = value.ToByteArra" +
+                    "yFastest();\r\n                }\r\n            }\r\n            public CheckSum256(st" +
+                    "ring value)\r\n            {\r\n                AsString = value;\r\n            }\r\n  " +
+                    "          public static explicit operator CheckSum256(string value)\r\n           " +
+                    " {\r\n                int valueLength = value?.Length ?? 0;\r\n                if (v" +
+                    "alueLength != ExpectedLength) throw new System.ArgumentException($\"A {nameof(Che" +
+                    "ckSum256)} should be {ExpectedLength} bytes in length. Supplied value byte lengt" +
+                    "h: {valueLength}\", nameof(value));\r\n                else return new CheckSum256(" +
+                    "value);\r\n            }\r\n            public override string ToString() => AsStrin" +
+                    "g;\r\n        }\r\n\t} \r\n");
             
-            #line 383 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
+            #line 498 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
  }
 if (includeEosSharpTest)
 { 
@@ -485,14 +580,14 @@ if (includeEosSharpTest)
                     "    {\r\n            var api = new EosApi(new EosConfigurator()\r\n            {\r\n  " +
                     "              SignProvider = null,\r\n                HttpEndpoint = \"");
             
-            #line 393 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
+            #line 508 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(api));
             
             #line default
             #line hidden
             this.Write("\",\r\n                ChainId = \"");
             
-            #line 394 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
+            #line 509 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(chainId));
             
             #line default
@@ -500,14 +595,14 @@ if (includeEosSharpTest)
             this.Write("\"\r\n            }, new HttpHandler());\r\n            var result = await api.GetTabl" +
                     "eRows<Contracts.");
             
-            #line 396 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
+            #line 511 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(getSafeName(exportName, "c_")));
             
             #line default
             #line hidden
             this.Write(".Responses.");
             
-            #line 396 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
+            #line 511 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(getSafeName(tables[0].name, "c_")));
             
             #line default
@@ -515,28 +610,28 @@ if (includeEosSharpTest)
             this.Write(">(new GetTableRowsRequest()\r\n            {\r\n                json = true,\r\n       " +
                     "         code = Contracts.");
             
-            #line 399 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
+            #line 514 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(getSafeName(exportName, "c_")));
             
             #line default
             #line hidden
             this.Write(".contract,\r\n                scope = Contracts.");
             
-            #line 400 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
+            #line 515 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(getSafeName(exportName, "c_")));
             
             #line default
             #line hidden
             this.Write(".contract,\r\n                table = Contracts.");
             
-            #line 401 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
+            #line 516 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(getSafeName(exportName, "c_")));
             
             #line default
             #line hidden
             this.Write(".Tables.");
             
-            #line 401 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
+            #line 516 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(getSafeName(tables[0].name, "c_")));
             
             #line default
@@ -545,7 +640,7 @@ if (includeEosSharpTest)
                     "     });\r\n            Console.WriteLine(Newtonsoft.Json.JsonConvert.SerializeObj" +
                     "ect(result.rows.FirstOrDefault()));\r\n        }\r\n    }\r\n");
             
-            #line 408 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
+            #line 523 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
  }
 
             

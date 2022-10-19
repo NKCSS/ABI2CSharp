@@ -2,7 +2,7 @@
   "profiles": {
     "Abi2CSharp": {
       "commandName": "Project",
-      "commandLineArgs": "atomicmarket"
+      "commandLineArgs": "blend.nefty"
     }
   }
 }
