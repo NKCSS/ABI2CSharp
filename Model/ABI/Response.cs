@@ -16,6 +16,7 @@ namespace Abi2CSharp.Model.ABI
         public Dictionary<string, int> actionIndexLookup { get; set; }
         public List<Type> types { get; set; }
         public Dictionary<string, string> typeLookup { get; set; }
+        public Dictionary<string, string> typeInverseLookup { get; set; }
         public List<Variant> variants { get; set; }
         public Dictionary<string, Variant> variantLookup { get; set; }
         public List<Table> tables { get; set; }
@@ -31,6 +32,7 @@ namespace Abi2CSharp.Model.ABI
             {
                 t = types[i];
                 typeLookup.Add(t.new_type_name, t.type);
+                typeInverseLookup.Add(t.type, t.new_type_name);
             }
             Struct s;
             for (int i = 0; i < structs.Count; ++i)
@@ -51,6 +53,7 @@ namespace Abi2CSharp.Model.ABI
             structIndexLookup = new Dictionary<string, int>();
             actionIndexLookup = new Dictionary<string, int>();
             typeLookup = new Dictionary<string, string>();
+            typeInverseLookup = new Dictionary<string, string>();
             using (var ms = new MemoryStream(raw))
             {
                 using (var br = new BinaryReader(ms))
@@ -66,6 +69,7 @@ namespace Abi2CSharp.Model.ABI
                         };
                         types.Add(t);
                         typeLookup.Add(t.new_type_name, t.type);
+                        typeInverseLookup.Add(t.type, t.new_type_name);
                     }
                     structs = new List<Struct>(br.DecodeInt32());
                     for (int i = 0; i < structs.Capacity; ++i)

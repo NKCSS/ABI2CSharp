@@ -149,7 +149,7 @@ namespace Abi2CSharp
                 string interfaceName;
                 foreach (var variant in abi.variants)
                 {
-                    interfaceName = $"I{variant.name}";
+                    interfaceName = $"I{(abi.typeInverseLookup.TryGetValue(variant.name, out string friendlyName) ? friendlyName : variant.name)}";
                     AbiTypeMapping.Add(variant.name, interfaceName);
                     foreach (var type in variant.types)
                     {
