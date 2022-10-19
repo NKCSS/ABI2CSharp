@@ -1,8 +1,11 @@
 ﻿using Abi2CSharp.Extensions;
+using Abi2CSharp.Interfaces;
+using Newtonsoft.Json;
 
 namespace Abi2CSharp.Model.eosio
 {
-    public class CheckSum256
+    [JsonConverter(typeof(CustomJsonConverter<CheckSum256>))]
+    public class CheckSum256 : ICustomSerialize<CheckSum256>
     {
         const int BitsPerByte = 8;
         const int ExpectedLength = 256 / BitsPerByte;
@@ -38,5 +41,7 @@ namespace Abi2CSharp.Model.eosio
         }
         public static implicit operator string(CheckSum256 value) => value.AsString;
         public override string ToString() => AsString;
+        public string Serialize() => AsString;
+        public CheckSum256 Deserialize(JsonReader reader) => reader.ReadAsString();
     }
 }

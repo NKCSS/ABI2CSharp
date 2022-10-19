@@ -8,6 +8,8 @@
 using System;
 using System.Globalization;
 using System.IO;
+using Newtonsoft.Json;
+using AlterMe.Model.eosio;
 <# } 
 if (includeEosSharpTest)
 { #>
@@ -355,18 +357,40 @@ foreach (var field in types[type])
             }
             return value;
         }
+    }    
+    public class CustomJsonConverter<T>
+        : JsonConverter
+        where T : ICustomSerialize<T>
+    {
+        public override bool CanConvert(Type objectType) => true;
+        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+        {
+            if (value is ICustomSerialize<T> t) writer.WriteValue(t.Serialize());
+        }
+        public override bool CanRead { get => true; }
+        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+        {
+            if (existingValue is ICustomSerialize<T> t) return t.Deserialize(reader);
+            return null;
+        }
     }
 <# }#>
 <# if (includeEosioModels) { #>
 	namespace Model.eosio
 	{
-		public class Asset
+        public interface ICustomSerialize<T>
+        {
+            string Serialize();
+            T Deserialize(JsonReader reader);
+        }
+        [JsonConverter(typeof(CustomJsonConverter<Asset>))]
+	    public class Asset : ICustomSerialize<Asset>
 		{
 			const string EnglishCultureName = "en-GB";
 			static readonly CultureInfo EnglishCulture = new CultureInfo(EnglishCultureName);
 			public Symbol Token { get; set; }
 			public UInt64 Balance { get; set; }
-			[Newtonsoft.Json.JsonIgnore]
+			[JsonIgnore]
 			public decimal BalanceDecimal { get => Balance / (decimal)Token.Factor; set => Balance = (ulong)(value * (decimal)Token.Factor); }
 			/// <remarks>
 			/// We use the F string format so there is only a decimal, no thousand separator.
@@ -387,8 +411,12 @@ foreach (var field in types[type])
 				else throw new ArgumentException($"Unable to parse '{parts[0]}' as a valid decimal");
 				return result;
 			}
-		}		
-        public class Name
+		    public static implicit operator string(Asset value) => value.ToString();
+		    public string Serialize() => ToString();
+		    public Asset Deserialize(JsonReader reader) => reader.ReadAsString();
+		}
+        [JsonConverter(typeof(CustomJsonConverter<Name>))]
+        public class Name : ICustomSerialize<Name>
         {
             ulong _Value;
             string _Name;
@@ -428,8 +456,11 @@ foreach (var field in types[type])
             public static implicit operator Name(ulong value) => new Name(value);
             public static implicit operator Name(string value) => new Name(value);
             public override string ToString() => AsString;
-        }        
-        public class Symbol
+            public string Serialize() => AsString;
+            public Name Deserialize(JsonReader reader) => reader.ReadAsString();
+        }
+	    [JsonConverter(typeof(CustomJsonConverter<Symbol>))]
+	    public class Symbol : ICustomSerialize<Symbol>
         {
 	        const char Separator = ',';
 	        const int FixedNameByteLength = 7;
@@ -439,7 +470,7 @@ foreach (var field in types[type])
 	        /// <see cref="System.Math.Pow">System.Math.Pow(10, 0)</see> returns 1, 
 	        /// otherwise, this should have been written with a <see cref="System.Math.Max"/>
 	        /// </remarks>
-	        [Newtonsoft.Json.JsonIgnore]
+	        [JsonIgnore]
 	        public double Factor { get => System.Math.Pow(10, precision); }
 	        public Symbol() { }
 	        public Symbol(string name, byte precision) {
@@ -455,8 +486,11 @@ foreach (var field in types[type])
 	        }
 		    public static implicit operator string(Symbol value) => value.ToString();
 	        public override string ToString() => $"{precision}{Separator}{name}";
-        }        
-        public class CheckSum256
+		    public string Serialize() => ToString();
+		    public Symbol Deserialize(JsonReader reader) => reader.ReadAsString();
+        }
+        [JsonConverter(typeof(CustomJsonConverter<CheckSum256>))]
+        public class CheckSum256 : ICustomSerialize<CheckSum256>
         {
             const int BitsPerByte = 8;
             const int ExpectedLength = 256 / BitsPerByte;
@@ -492,6 +526,8 @@ foreach (var field in types[type])
             }
             public static implicit operator string(CheckSum256 value) => value.AsString;
             public override string ToString() => AsString;
+            public string Serialize() => AsString;
+            public CheckSum256 Deserialize(JsonReader reader) => reader.ReadAsString();
         }
 	} 
 <# }
@@ -516,7 +552,7 @@ if (includeEosSharpTest)
                 reverse = false,
                 show_payer = false,
             });
-            Console.WriteLine(Newtonsoft.Json.JsonConvert.SerializeObject(result.rows.FirstOrDefault()));
+            Console.WriteLine(JsonConvert.SerializeObject(result.rows.FirstOrDefault()));
         }
     }
 <# }

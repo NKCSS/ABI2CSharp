@@ -1,7 +1,12 @@
-﻿namespace Abi2CSharp.Model.eosio
+﻿using Abi2CSharp.Extensions;
+using Abi2CSharp.Interfaces;
+using Newtonsoft.Json;
+
+namespace Abi2CSharp.Model.eosio
 {
-    public class Symbol
-    {
+	[JsonConverter(typeof(CustomJsonConverter<Symbol>))]
+	public class Symbol : ICustomSerialize<Symbol>
+	{
 		const char Separator = ',';
         public byte precision { get; set; }
         public string name { get; set; }
@@ -25,5 +30,7 @@
 		}
 		public static implicit operator string(Symbol value) => value.ToString();
 		public override string ToString() => $"{precision}{Separator}{name}";
-	}
+		public string Serialize() => ToString();
+		public Symbol Deserialize(JsonReader reader) => reader.ReadAsString();
+    }
 }

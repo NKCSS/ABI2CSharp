@@ -1,9 +1,11 @@
 ﻿using Abi2CSharp.Extensions;
-using System;
+using Abi2CSharp.Interfaces;
+using Newtonsoft.Json;
 
 namespace Abi2CSharp.Model.eosio
 {
-    public class Name
+    [JsonConverter(typeof(CustomJsonConverter<Name>))]
+    public class Name : ICustomSerialize<Name>
     {
         ulong _Value;
         string _Name;
@@ -43,5 +45,9 @@ namespace Abi2CSharp.Model.eosio
         public static implicit operator Name(ulong value) => new Name(value);
         public static implicit operator Name(string value) => new Name(value);
         public override string ToString() => AsString;
+
+        public string Serialize() => AsString;
+
+        public Name Deserialize(JsonReader reader) => reader.ReadAsString();
     }
 }

@@ -1,12 +1,13 @@
 ﻿using Abi2CSharp.Extensions;
+using Abi2CSharp.Interfaces;
+using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.IO;
 
 namespace Abi2CSharp.Model.eosio
 {
-	public class Asset
+    [JsonConverter(typeof(CustomJsonConverter<Asset>))]
+	public class Asset : ICustomSerialize<Asset>
 	{
 		const string EnglishCultureName = "en-GB";
 		static readonly CultureInfo EnglishCulture = new CultureInfo(EnglishCultureName);
@@ -18,7 +19,7 @@ namespace Abi2CSharp.Model.eosio
 		/// We use the F string format so there is only a decimal, no thousand separator.
 		/// </remarks>
 		public override string ToString() => $"{BalanceDecimal.ToString($"F{Token.precision}", EnglishCulture)} {Token.name}";
-		public Asset() { } // Empty constructor for serializing
+        public Asset() { } // Empty constructor for serializing
 		public static implicit operator Asset(string value)
 		{
 			Asset result = new Asset();
@@ -33,5 +34,8 @@ namespace Abi2CSharp.Model.eosio
 			else throw new ArgumentException($"Unable to parse '{parts[0]}' as a valid decimal");
 			return result;
 		}
+		public static implicit operator string(Asset value) => value.ToString();
+		public string Serialize() => ToString();
+		public Asset Deserialize(JsonReader reader) => reader.ReadAsString();
 	}
 }
