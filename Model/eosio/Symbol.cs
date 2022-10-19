@@ -16,13 +16,14 @@
 			this.name = name;
 			this.precision = precision;
 		}
-		public static explicit operator Symbol(string value)
+		public static implicit operator Symbol(string value)
         {
 			string[] parts = value.Split(Separator);
 			if (parts.Length != 2) throw new System.ArgumentException($"Symbol should be precision, followed by name, separated by '{Separator}'", nameof(value));
 			else if (!byte.TryParse(parts[0], out byte precision)) throw new System.ArgumentException($"Can't parse '{parts[0]}' as precision", nameof(value));
 			else return new Symbol(parts[1], precision);
 		}
+		public static implicit operator string(Symbol value) => value.ToString();
 		public override string ToString() => $"{precision}{Separator}{name}";
 	}
 }

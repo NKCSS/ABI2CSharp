@@ -30,12 +30,13 @@ namespace Abi2CSharp.Model.eosio
         {
             AsString = value;
         }
-        public static explicit operator CheckSum256(string value)
+        public static implicit operator CheckSum256(string value)
         {
             int valueLength = value?.Length ?? 0;
             if (valueLength != ExpectedLength) throw new System.ArgumentException($"A {nameof(CheckSum256)} should be {ExpectedLength} bytes in length. Supplied value byte length: {valueLength}", nameof(value));
             else return new CheckSum256(value);
         }
+        public static implicit operator string(CheckSum256 value) => value.AsString;
         public override string ToString() => AsString;
     }
 }

@@ -40,8 +40,8 @@ namespace Abi2CSharp.Model.eosio
         }
         public static implicit operator ulong(Name value) => value.Value;
         public static implicit operator string (Name value) => value.AsString;
-        public static explicit operator Name(ulong value) => new Name(value);
-        public static explicit operator Name(string value) => new Name(value);
+        public static implicit operator Name(ulong value) => new Name(value);
+        public static implicit operator Name(string value) => new Name(value);
         public override string ToString() => AsString;
     }
 }

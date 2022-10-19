@@ -29,9 +29,6 @@ Func<string, string, string> getSafeName = (name, prefix) => {
 #>
 namespace AlterMe
 {
-    /// <summary>
-    /// EosApi defines api methods to interface with a http handler
-    /// </summary>
     public static partial class Contracts
     {    
         public static class <#= getSafeName(exportName, "c_") #>
@@ -428,8 +425,8 @@ foreach (var field in types[type])
             }
             public static implicit operator ulong(Name value) => value.Value;
             public static implicit operator string (Name value) => value.AsString;
-            public static explicit operator Name(ulong value) => new Name(value);
-            public static explicit operator Name(string value) => new Name(value);
+            public static implicit operator Name(ulong value) => new Name(value);
+            public static implicit operator Name(string value) => new Name(value);
             public override string ToString() => AsString;
         }        
         public class Symbol
@@ -449,13 +446,14 @@ foreach (var field in types[type])
 		        this.name = name;
 		        this.precision = precision;
 	        }
-	        public static explicit operator Symbol(string value)
+	        public static implicit operator Symbol(string value)
             {
 		        string[] parts = value.Split(Separator);
 		        if (parts.Length != 2) throw new System.ArgumentException($"Symbol should be precision, followed by name, separated by '{Separator}'", nameof(value));
 		        else if (!byte.TryParse(parts[0], out byte precision)) throw new System.ArgumentException($"Can't parse '{parts[0]}' as precision", nameof(value));
 		        else return new Symbol(parts[1], precision);
 	        }
+		    public static implicit operator string(Symbol value) => value.ToString();
 	        public override string ToString() => $"{precision}{Separator}{name}";
         }        
         public class CheckSum256
@@ -486,12 +484,13 @@ foreach (var field in types[type])
             {
                 AsString = value;
             }
-            public static explicit operator CheckSum256(string value)
+            public static implicit operator CheckSum256(string value)
             {
                 int valueLength = value?.Length ?? 0;
                 if (valueLength != ExpectedLength) throw new System.ArgumentException($"A {nameof(CheckSum256)} should be {ExpectedLength} bytes in length. Supplied value byte length: {valueLength}", nameof(value));
                 else return new CheckSum256(value);
             }
+            public static implicit operator string(CheckSum256 value) => value.AsString;
             public override string ToString() => AsString;
         }
 	} 
