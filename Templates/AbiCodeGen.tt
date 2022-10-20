@@ -148,7 +148,7 @@ namespace Abi2CSharp
                 {
                     public const string TableName = "<#= table.name #>";
 <# if (includeEosSharpTest) { #>
-                    public static Task<GetTableRowsResponse<Types.<#= typeNameName #>>> Query(EosApi api, bool reverse = false, uint? keyIndex = null, string lowerBound = null, string upperBound = null, string scope = null) 
+                    public static Task<GetTableRowsResponse<Types.<#= typeNameName #>>> Query(EosApi api, bool reverse = false, uint? keyIndex = null, string lowerBound = null, string upperBound = null, string scope = null, int maxResults = 10) 
                         => api.GetTableRows<Types.<#= typeNameName #>>(new GetTableRowsRequest()
                         {
                             json = true,
@@ -159,7 +159,8 @@ namespace Abi2CSharp
                             show_payer = false,
                             index_position = keyIndex,
                             lower_bound = lowerBound,
-                            upper_bound = upperBound
+                            upper_bound = upperBound,
+                            limit = maxResults,
                         });
 <# } #>
                 }
