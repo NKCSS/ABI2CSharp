@@ -32,6 +32,7 @@ namespace Abi2CSharp.Model.eosio
                 }
             }
         }
+        public Name() { } // Empty constructor for serializing
         public Name(string value)
         {
             AsString = value;
@@ -45,9 +46,9 @@ namespace Abi2CSharp.Model.eosio
         public static implicit operator Name(ulong value) => new Name(value);
         public static implicit operator Name(string value) => new Name(value);
         public override string ToString() => AsString;
-
         public string Serialize() => AsString;
-
-        public Name Deserialize(JsonReader reader) => reader.ReadAsString();
+        public Name Deserialize(JsonReader reader) => (string)reader.Value;
+        public override int GetHashCode() => AsString.GetHashCode();
+        public override bool Equals(object obj) => obj?.GetHashCode().Equals(GetHashCode()) ?? false;
     }
 }

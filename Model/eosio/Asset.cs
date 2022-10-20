@@ -36,6 +36,8 @@ namespace Abi2CSharp.Model.eosio
 		}
 		public static implicit operator string(Asset value) => value.ToString();
 		public string Serialize() => ToString();
-		public Asset Deserialize(JsonReader reader) => reader.ReadAsString();
+		public Asset Deserialize(JsonReader reader) => (string)reader.Value;
+		public override int GetHashCode() => ToString().GetHashCode();
+		public override bool Equals(object obj) => obj?.GetHashCode().Equals(GetHashCode()) ?? false;
 	}
 }

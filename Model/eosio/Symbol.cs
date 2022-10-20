@@ -16,7 +16,7 @@ namespace Abi2CSharp.Model.eosio
 		/// </remarks>
 		[Newtonsoft.Json.JsonIgnore]
 		public double Factor { get => System.Math.Pow(10, precision); }
-		public Symbol() { }
+		public Symbol() { } // Empty constructor for serializing
 		public Symbol(string name, byte precision) {
 			this.name = name;
 			this.precision = precision;
@@ -31,6 +31,8 @@ namespace Abi2CSharp.Model.eosio
 		public static implicit operator string(Symbol value) => value.ToString();
 		public override string ToString() => $"{precision}{Separator}{name}";
 		public string Serialize() => ToString();
-		public Symbol Deserialize(JsonReader reader) => reader.ReadAsString();
-    }
+		public Symbol Deserialize(JsonReader reader) => (string)reader.Value;
+		public override int GetHashCode() => ToString().GetHashCode();
+		public override bool Equals(object obj) => obj?.GetHashCode().Equals(GetHashCode()) ?? false;
+	}
 }

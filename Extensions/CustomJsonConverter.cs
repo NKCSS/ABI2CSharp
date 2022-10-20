@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Text.Json.Serialization;
+using Abi2CSharp.Interfaces;
 using Newtonsoft.Json;
 
 namespace Abi2CSharp.Extensions
@@ -27,7 +29,10 @@ namespace Abi2CSharp.Extensions
 
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
-            if (existingValue is Interfaces.ICustomSerialize<T> t) return t.Deserialize(reader);
+            if (objectType.GetInterfaces().Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(ICustomSerialize<>)))
+            {
+                if ((existingValue ?? Activator.CreateInstance<T>()) is ICustomSerialize<T> t) return t.Deserialize(reader);
+            }
             return null;
         }
     }

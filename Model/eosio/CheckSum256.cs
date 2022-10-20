@@ -29,6 +29,7 @@ namespace Abi2CSharp.Model.eosio
                 _Raw = value.ToByteArrayFastest();
             }
         }
+        public CheckSum256() { } // Empty constructor for serializing
         public CheckSum256(string value)
         {
             AsString = value;
@@ -42,6 +43,8 @@ namespace Abi2CSharp.Model.eosio
         public static implicit operator string(CheckSum256 value) => value.AsString;
         public override string ToString() => AsString;
         public string Serialize() => AsString;
-        public CheckSum256 Deserialize(JsonReader reader) => reader.ReadAsString();
+        public CheckSum256 Deserialize(JsonReader reader) => (string)reader.Value;
+        public override int GetHashCode() => AsString.GetHashCode();
+        public override bool Equals(object obj) => obj?.GetHashCode().Equals(GetHashCode()) ?? false;
     }
 }

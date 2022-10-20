@@ -34,9 +34,14 @@ namespace Abi2CSharp.Model.eosio
                 }
             }
         }
+        public TimePointSec() { } // Empty constructor for serializing
         public TimePointSec(uint value)
         {
             Value = value;
+        }
+        public TimePointSec(string value)
+        {
+            Moment = DateTime.SpecifyKind(DateTime.ParseExact(value, "yyyy-MM-dd'T'HH:mm:ss.fff", System.Globalization.CultureInfo.InvariantCulture), DateTimeKind.Utc);
         }
         public TimePointSec(DateTime value)
         {
@@ -46,10 +51,22 @@ namespace Abi2CSharp.Model.eosio
         public static implicit operator DateTime(TimePointSec value) => value.Moment;
         public static implicit operator TimePointSec(uint value) => new TimePointSec(value);
         public static implicit operator TimePointSec(DateTime value) => new TimePointSec(value);
+        public static implicit operator TimePointSec(string value) => new TimePointSec(value);
         public override string ToString() => Moment.ToString("yyyy-MM-dd HH:mm:ss.fff");
 
         public string Serialize() => Value.ToString();
-
-        public TimePointSec Deserialize(JsonReader reader) => uint.Parse(reader.ReadAsString());
+        /// <summary>
+        /// NewtonSoft already deserializes the DateTime string properly, so we just need to ensure we specify it's in UTC, but we also support ulong and raw string.
+        /// </summary>
+        /// <param name="reader"></param>
+        /// <returns></returns>
+        public TimePointSec Deserialize(JsonReader reader)
+        {
+            if (reader.Value is DateTime t) return DateTime.SpecifyKind(t, DateTimeKind.Utc);
+            else if (reader.Value is string s) return uint.TryParse(s, out uint v) ? new TimePointSec(v) : new TimePointSec(s);
+            else throw new ArgumentException($"Cannot deserialize '{reader.Value}' as a {nameof(TimePointSec)}");
+        }
+        public override int GetHashCode() => Moment.GetHashCode();
+        public override bool Equals(object obj) => obj?.GetHashCode().Equals(GetHashCode()) ?? false;
     }
 }
