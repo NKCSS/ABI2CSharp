@@ -156,6 +156,39 @@ namespace Abi2CSharp
 }
 ```
 
+### Example snipper to query your Multiplayer Runs from ZOS (Zombie Outbreak Survivor)
+
+```csharp
+// Code below expect you to have executed the code against 'multi.zos'.
+Model.eosio.Name wallet = "y3zra.wam";
+var api = new EosApi(new EosConfigurator()
+{
+    SignProvider = null,
+    HttpEndpoint = "https://api.waxsweden.org",
+    ChainId = "1064487b3cd1a897ce03ae5b6a865651747e2e152090f99c1d19d44e01aea5a4"
+}, new HttpHandler());            
+var result = await Contracts.multi_zos.Tables.loadouts.Query(api, scope: wallet);
+foreach (var row in result.rows.OrderBy(x => x.end_at.Moment))
+{
+    if(row.end_at.Moment < DateTime.UtcNow) 
+        Console.WriteLine($"id: {row.survivor_id} [READY!] ({row.survivor_health.ToString().PadLeft(3, ' ')} HP, {row.weapon_strength.ToString().PadLeft(2, ' ')} DAMAGE, {row.shield_strength.ToString().PadLeft(2, ' ')} ARMOUR)");
+    else 
+        Console.WriteLine($"id: {row.survivor_id} ready @ {row.end_at.Moment.ToLocalTime():yyyy-MM-dd HH:mm:ss} ({row.survivor_health.ToString().PadLeft(3, ' ')} HP, {row.weapon_strength.ToString().PadLeft(2, ' ')} DAMAGE, {row.shield_strength.ToString().PadLeft(2, ' ')} ARMOUR)");
+}
+```
+
+#### example output
+
+```
+id: 1099660746085 ready @ 2022-10-21 15:19:59 (100 HP, 13 DAMAGE, 13 ARMOUR)
+id: 1099599962964 ready @ 2022-10-21 15:21:39 (100 HP,  8 DAMAGE, 13 ARMOUR)
+id: 1099599647042 ready @ 2022-10-21 15:22:07 (100 HP, 13 DAMAGE, 13 ARMOUR)
+id: 1099599657203 ready @ 2022-10-21 15:24:35 (100 HP,  8 DAMAGE, 13 ARMOUR)
+id: 1099599648120 ready @ 2022-10-21 17:09:14 (100 HP, 34 DAMAGE, 34 ARMOUR)
+id: 1099659607557 ready @ 2022-10-22 16:45:41 (100 HP, 21 DAMAGE, 21 ARMOUR)
+id: 1099599655455 ready @ 2022-10-22 17:08:20 (100 HP, 21 DAMAGE, 13 ARMOUR)
+```
+
 ### Contant me
 
 [![Twitter URL](https://img.shields.io/twitter/url/https/twitter.com/NKCSS.svg?style=social&label=Follow%20%40NKCSS)](https://twitter.com/NKCSS) 
