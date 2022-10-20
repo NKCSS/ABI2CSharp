@@ -36,6 +36,15 @@ namespace Abi2CSharp
             { "int8", "byte" },
             { "float32", "Single" },
             { "float64", "double" },
+            { "bytes", "byte[]" },
+            { "public_key", "string" }, // When interacting with API's, DateTime works, but it would be nicer to be able to also use the underlying real value. it's a type (Variable Length uint) followed by 33 characters            
+            { "block_timestamp_type", "DateTime" },// When interacting with API's, DateTime works, but it would be nicer to be able to also use the underlying real value. block_timestamp_type; milliseconds since chain epoch I believe; have to check if this is different per chain.
+            { "uint128", "string" }, //TODO: Add BigNumber implementation
+            { "int128", "string" }, //TODO: Add BigNumber implementation
+            { "uint256", "string" }, //TODO: Add BigNumber implementation
+            { "int256", "string" }, //TODO: Add BigNumber implementation
+            { "varuint32", "ulong"}, //TODO: Add Custom type that uses VariableLengthInteger to decode from/to
+            { "varint32 ", "ulong"}, //TODO: Add Custom type that uses ZigZag to decode from/to
         };
         #endregion
         static async Task Main(string[] args)

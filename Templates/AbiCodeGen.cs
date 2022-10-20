@@ -35,10 +35,9 @@ namespace Abi2CSharp.Templates
             
             #line default
             #line hidden
-            this.Write("using System;\r\nusing System.Globalization;\r\nusing System.IO;\r\nusing Newtonsoft.Js" +
-                    "on;\r\nusing AlterMe.Model.eosio;\r\n");
+            this.Write("using System.Globalization;\r\nusing System.IO;\r\nusing AlterMe.Model.eosio;\r\n");
             
-            #line 13 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
+            #line 11 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
  } 
 if (includeEosSharpTest)
 { 
@@ -48,45 +47,140 @@ if (includeEosSharpTest)
             this.Write("using EosSharp;\r\nusing EosSharp.Core;\r\nusing EosSharp.Core.Api.v1;\r\nusing System." +
                     "Net.Http;\r\nusing System.Linq;\r\n");
             
-            #line 21 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
+            #line 19 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
+ } 
+if (includeEosSharpTest || includeEosioModels)
+{ 
+            
+            #line default
+            #line hidden
+            this.Write("using System;\r\nusing Newtonsoft.Json;\r\n");
+            
+            #line 24 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
  } 
             
             #line default
             #line hidden
             this.Write("using System.Collections.Generic;\r\nusing System.Threading.Tasks;\r\n");
             
-            #line 24 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
+            #line 27 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
 
+HashSet<string> ReservedKeyWords = new HashSet<string> {
+    "abstract",
+    "as",
+    "base",
+    "bool",
+    "break",
+    "byte",
+    "case",
+    "catch",
+    "char",
+    "checked",
+    "class",
+    "const",
+    "continue",
+    "decimal",
+    "default",
+    "delegate",
+    "do",
+    "double",
+    "else",
+    "enum",
+    "event",
+    "explicit",
+    "extern",
+    "false",
+    "finally",
+    "fixed",
+    "float",
+    "for",
+    "foreach",
+    "goto",
+    "if",
+    "implicit",
+    "in",
+    "int",
+    "interface",
+    "internal",
+    "is",
+    "lock",
+    "long",
+    "namespace",
+    "new",
+    "null",
+    "object",
+    "operator",
+    "out",
+    "override",
+    "params",
+    "private",
+    "protected",
+    "public",
+    "readonly",
+    "ref",
+    "return",
+    "sbyte",
+    "sealed",
+    "short",
+    "sizeof",
+    "stackalloc",
+    "static",
+    "string",
+    "struct",
+    "switch",
+    "this",
+    "throw",
+    "true",
+    "try",
+    "typeof",
+    "uint",
+    "ulong",
+    "unchecked",
+    "unsafe",
+    "ushort",
+    "using",
+    "virtual",
+    "void",
+    "volatile",
+    "while"
+};
 int lowerBound = (int)'0', upperBound = (int)'9';
-Func<string, string, string> getSafeName = (name, prefix) => {
+Func<string, string, string> getSafeTypeName = (name, prefix) => {
     if (name.StartsWith("Model.eosio.")) return name;
     int firstCharCode = (int)name[0];
     return ((firstCharCode < lowerBound || firstCharCode > upperBound) ? name : $"{prefix}{name}").Replace('.','_');
 };
+Func<string, string, string, string> getSafeFieldName = (name, prefix, parentType) => {
+    if (ReservedKeyWords.Contains(name)) return $"@{name}";
+    else if (!string.IsNullOrWhiteSpace(parentType) && parentType == name) return $"@{name}";
+    int firstCharCode = (int)name[0];
+    return ((firstCharCode < lowerBound || firstCharCode > upperBound) ? name : $"{prefix}{name}");
+};
+string contractClassTypeName = getSafeTypeName(exportName, "c_");
 
             
             #line default
             #line hidden
-            this.Write("namespace AlterMe\r\n{\r\n    public static partial class Contracts\r\n    {    \r\n     " +
-                    "   public static class ");
+            this.Write("namespace Abi2CSharp\r\n{\r\n    public static partial class Contracts\r\n    {\r\n      " +
+                    "  public static class ");
             
-            #line 36 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(getSafeName(exportName, "c_")));
+            #line 125 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(contractClassTypeName));
             
             #line default
             #line hidden
             this.Write("\r\n        {\r\n            public const string contract = \"");
             
-            #line 38 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
+            #line 127 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(contractName));
             
             #line default
             #line hidden
             this.Write("\";\r\n            public static class Actions\r\n            {\r\n");
             
-            #line 41 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
+            #line 130 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
  foreach (var action in actions) { 
-    string name = getSafeName(action.name, "t_");
+    string name = getSafeTypeName(action.name, "t_");
     if(name == action.name)
     { 
             
@@ -94,42 +188,42 @@ Func<string, string, string> getSafeName = (name, prefix) => {
             #line hidden
             this.Write("                public const string ");
             
-            #line 45 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
+            #line 134 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(name));
             
             #line default
             #line hidden
             this.Write(" = nameof(");
             
-            #line 45 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
+            #line 134 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(name));
             
             #line default
             #line hidden
             this.Write(");\r\n");
             
-            #line 46 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
+            #line 135 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
   } else { 
             
             #line default
             #line hidden
             this.Write("                public const string ");
             
-            #line 47 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
+            #line 136 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(name));
             
             #line default
             #line hidden
             this.Write(" = \"");
             
-            #line 47 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
+            #line 136 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(action.name));
             
             #line default
             #line hidden
             this.Write("\";\r\n");
             
-            #line 48 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
+            #line 137 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
   }
 } 
             
@@ -137,52 +231,105 @@ Func<string, string, string> getSafeName = (name, prefix) => {
             #line hidden
             this.Write("            }\r\n            public static class Tables\r\n            {\r\n");
             
-            #line 53 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
+            #line 142 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
  foreach (var table in tables) { 
-    string name = getSafeName(table.name, "t_");
-    if(name == table.name)
+    string name = getSafeTypeName(table.name, "t_");
+    string typeNameName = getSafeTypeName(table.type, "t_");
     { 
             
             #line default
             #line hidden
-            this.Write("                public const string ");
+            this.Write("                // Rows are of type ");
             
-            #line 57 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
+            #line 146 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(typeNameName));
+            
+            #line default
+            #line hidden
+            this.Write(". If you want helper code generated, enable includeEosSharpTest\r\n                " +
+                    "public static class ");
+            
+            #line 147 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(name));
             
             #line default
             #line hidden
-            this.Write(" = nameof(");
+            this.Write("\r\n                {\r\n                    public const string TableName = \"");
             
-            #line 57 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(name));
-            
-            #line default
-            #line hidden
-            this.Write(");\r\n");
-            
-            #line 58 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
-  } else { 
-            
-            #line default
-            #line hidden
-            this.Write("                public const string ");
-            
-            #line 59 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(name));
-            
-            #line default
-            #line hidden
-            this.Write(" = \"");
-            
-            #line 59 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
+            #line 149 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(table.name));
             
             #line default
             #line hidden
             this.Write("\";\r\n");
             
-            #line 60 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
+            #line 150 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
+ if (includeEosSharpTest) { 
+            
+            #line default
+            #line hidden
+            this.Write("                    public static Task<GetTableRowsResponse<Types.");
+            
+            #line 151 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(typeNameName));
+            
+            #line default
+            #line hidden
+            this.Write(">> Query(EosApi api, bool reverse = false, uint? keyIndex = null, string lowerBou" +
+                    "nd = null, string upperBound = null, string scope = null) \r\n                    " +
+                    "    => api.GetTableRows<Types.");
+            
+            #line 152 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(typeNameName));
+            
+            #line default
+            #line hidden
+            this.Write(">(new GetTableRowsRequest()\r\n                        {\r\n                         " +
+                    "   json = true,\r\n                            code = Contracts.");
+            
+            #line 155 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(contractClassTypeName));
+            
+            #line default
+            #line hidden
+            this.Write(".contract,\r\n                            scope = scope ?? Contracts.");
+            
+            #line 156 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(contractClassTypeName));
+            
+            #line default
+            #line hidden
+            this.Write(".contract,\r\n                            table = Contracts.");
+            
+            #line 157 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(contractClassTypeName));
+            
+            #line default
+            #line hidden
+            this.Write(".Tables.");
+            
+            #line 157 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(name));
+            
+            #line default
+            #line hidden
+            this.Write(@".TableName,
+                            reverse = reverse,
+                            show_payer = false,
+                            index_position = keyIndex,
+                            lower_bound = lowerBound,
+                            upper_bound = upperBound
+                        });
+");
+            
+            #line 164 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
+ } 
+            
+            #line default
+            #line hidden
+            this.Write("                }\r\n");
+            
+            #line 166 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
   }
 } 
             
@@ -190,28 +337,29 @@ Func<string, string, string> getSafeName = (name, prefix) => {
             #line hidden
             this.Write("            }\r\n            public static class Types\r\n            {\r\n");
             
-            #line 65 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
+            #line 171 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
  foreach (string i in VariantInterfaces) { 
             
             #line default
             #line hidden
             this.Write("                public interface ");
             
-            #line 66 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
+            #line 172 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(i));
             
             #line default
             #line hidden
             this.Write(" { }\r\n");
             
-            #line 67 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
+            #line 173 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
  } 
             
             #line default
             #line hidden
             
-            #line 68 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
+            #line 174 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
  foreach (var type in types.Keys) { 
+    string className = getSafeTypeName(type, "t_");
     if (variantUsageLookup.TryGetValue(type, out var interfaces))
     { 
             
@@ -219,21 +367,21 @@ Func<string, string, string> getSafeName = (name, prefix) => {
             #line hidden
             this.Write("                public class ");
             
-            #line 71 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(getSafeName(type, "t_")));
+            #line 178 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(className));
             
             #line default
             #line hidden
             this.Write(" : ");
             
-            #line 71 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
+            #line 178 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(string.Join(", ", interfaces)));
             
             #line default
             #line hidden
             this.Write(" {\r\n");
             
-            #line 72 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
+            #line 179 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
   }
     else
     { 
@@ -242,14 +390,14 @@ Func<string, string, string> getSafeName = (name, prefix) => {
             #line hidden
             this.Write("                public class ");
             
-            #line 75 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(getSafeName(type, "t_")));
+            #line 182 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(className));
             
             #line default
             #line hidden
             this.Write(" {\r\n");
             
-            #line 76 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
+            #line 183 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
   }
 foreach (var field in types[type])
     { 
@@ -258,21 +406,21 @@ foreach (var field in types[type])
             #line hidden
             this.Write("                    public ");
             
-            #line 79 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(getSafeName(field.Value, "t_")));
+            #line 186 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(getSafeTypeName(field.Value, "t_")));
             
             #line default
             #line hidden
             this.Write(" ");
             
-            #line 79 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(field.Key));
+            #line 186 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(getSafeFieldName(field.Key, "t_", className)));
             
             #line default
             #line hidden
             this.Write("  { get; set; }\r\n");
             
-            #line 80 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
+            #line 187 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
   }
 
             
@@ -280,70 +428,117 @@ foreach (var field in types[type])
             #line hidden
             this.Write("                }\r\n");
             
-            #line 83 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
+            #line 190 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
 } 
             
             #line default
             #line hidden
-            this.Write("            }\r\n            public static class Requests\r\n            {\r\n");
+            this.Write("            }\r\n            public static class Requests\r\n            {\r\n         " +
+                    "       const string DefaultPermission = \"active\";\r\n");
             
-            #line 87 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
+            #line 195 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
  foreach (var action in actions) { 
+    string classNameSafe = getSafeTypeName(action.name, "t_");
+
             
             #line default
             #line hidden
             this.Write("                public class ");
             
-            #line 88 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(getSafeName(action.name, "t_")));
+            #line 198 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(classNameSafe));
             
             #line default
             #line hidden
             this.Write(" : Types.");
             
-            #line 88 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(getSafeName(action.type, "t_")));
+            #line 198 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(getSafeTypeName(action.type, "t_")));
             
             #line default
             #line hidden
-            this.Write("\r\n                {\r\n                }\r\n");
+            this.Write("\r\n                {                \r\n");
             
-            #line 91 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
+            #line 200 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
+ if (includeEosSharpTest)
+{ 
+            
+            #line default
+            #line hidden
+            this.Write("                    public static EosSharp.Core.Api.v1.Action CreateAction(Model." +
+                    "eosio.Name wallet, Types.");
+            
+            #line 202 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(classNameSafe));
+            
+            #line default
+            #line hidden
+            this.Write(" data) => CreateAction(wallet, data, DefaultPermission);\r\n                    pub" +
+                    "lic static EosSharp.Core.Api.v1.Action CreateAction(Model.eosio.Name wallet, Typ" +
+                    "es.");
+            
+            #line 203 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(classNameSafe));
+            
+            #line default
+            #line hidden
+            this.Write(" data, Model.eosio.Name permission)\r\n                        =>\r\n                " +
+                    "        new EosSharp.Core.Api.v1.Action()\r\n                        {\r\n          " +
+                    "                  account = contract,\r\n                            name = Action" +
+                    "s.");
+            
+            #line 208 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(classNameSafe));
+            
+            #line default
+            #line hidden
+            this.Write(",\r\n                            authorization = new List<PermissionLevel>() { new " +
+                    "PermissionLevel() { actor = wallet, permission = permission } },\r\n              " +
+                    "              data = data\r\n                        };\r\n");
+            
+            #line 212 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
+ } 
+            
+            #line default
+            #line hidden
+            this.Write("                }\r\n");
+            
+            #line 214 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
 } 
             
             #line default
             #line hidden
             this.Write("            }\r\n            public static class Responses\r\n            {\r\n");
             
-            #line 95 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
+            #line 218 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
  foreach (var table in tables) { 
             
             #line default
             #line hidden
             this.Write("                public class ");
             
-            #line 96 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(getSafeName(table.name, "t_")));
+            #line 219 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(getSafeTypeName(table.name, "t_")));
             
             #line default
             #line hidden
             this.Write(" : Types.");
             
-            #line 96 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(getSafeName(table.type, "t_")));
+            #line 219 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(getSafeTypeName(table.type, "t_")));
             
             #line default
             #line hidden
             this.Write("\r\n                {\r\n                }\r\n");
             
-            #line 99 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
+            #line 222 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
 } 
             
             #line default
             #line hidden
             this.Write("            }\r\n        }\r\n    }\r\n");
             
-            #line 103 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
+            #line 226 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
  if (includeExtensions) { 
             
             #line default
@@ -500,13 +695,13 @@ foreach (var field in types[type])
                     "turn t.Deserialize(reader);\r\n            }\r\n            return null;\r\n        }\r" +
                     "\n    }\r\n");
             
-            #line 380 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
+            #line 503 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
  }
             
             #line default
             #line hidden
             
-            #line 381 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
+            #line 504 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
  if (includeEosioModels) { 
             
             #line default
@@ -683,10 +878,12 @@ foreach (var field in types[type])
                     "shCode() => Moment.GetHashCode();\r\n            public override bool Equals(objec" +
                     "t obj) => obj?.GetHashCode().Equals(GetHashCode()) ?? false;\r\n        }\r\n\t} \r\n");
             
-            #line 672 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
+            #line 795 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
  }
 if (includeEosSharpTest)
 { 
+    string safeExportName = getSafeTypeName(exportName, "c_");
+
             
             #line default
             #line hidden
@@ -694,94 +891,63 @@ if (includeEosSharpTest)
                     "    {\r\n            var api = new EosApi(new EosConfigurator()\r\n            {\r\n  " +
                     "              SignProvider = null,\r\n                HttpEndpoint = \"");
             
-            #line 682 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
+            #line 807 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(api));
             
             #line default
             #line hidden
             this.Write("\",\r\n                ChainId = \"");
             
-            #line 683 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
+            #line 808 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(chainId));
             
             #line default
             #line hidden
-            this.Write("\"\r\n            }, new HttpHandler());\r\n            var result = await api.GetTabl" +
-                    "eRows<Contracts.");
+            this.Write("\"\r\n            }, new HttpHandler());\r\n            var result = await Contracts.");
             
-            #line 685 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(getSafeName(exportName, "c_")));
-            
-            #line default
-            #line hidden
-            this.Write(".Responses.");
-            
-            #line 685 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(getSafeName(tables[0].name, "c_")));
-            
-            #line default
-            #line hidden
-            this.Write(">(new GetTableRowsRequest()\r\n            {\r\n                json = true,\r\n       " +
-                    "         code = Contracts.");
-            
-            #line 688 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(getSafeName(exportName, "c_")));
-            
-            #line default
-            #line hidden
-            this.Write(".contract,\r\n                scope = Contracts.");
-            
-            #line 689 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(getSafeName(exportName, "c_")));
-            
-            #line default
-            #line hidden
-            this.Write(".contract,\r\n                table = Contracts.");
-            
-            #line 690 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(getSafeName(exportName, "c_")));
+            #line 810 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(safeExportName));
             
             #line default
             #line hidden
             this.Write(".Tables.");
             
-            #line 690 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(getSafeName(tables[0].name, "c_")));
+            #line 810 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(getSafeTypeName(tables[0].name, "c_")));
             
             #line default
             #line hidden
-            this.Write(",\r\n                reverse = false,\r\n                show_payer = false,\r\n       " +
-                    "     });\r\n            Console.WriteLine(JsonConvert.SerializeObject(result.rows." +
-                    "FirstOrDefault()));\r\n        }\r\n        public static void TestEosioTypeSerializ" +
-                    "ation()\r\n        {\r\n            string raw, json;\r\n            raw = \"1.00000000" +
-                    " WAX\";\r\n            Model.eosio.Asset a = raw;\r\n            json = JsonConvert.S" +
-                    "erializeObject(a);\r\n            var ad = JsonConvert.DeserializeObject<Model.eos" +
-                    "io.Asset>(json);\r\n            if (!a.Equals(ad)) throw new ApplicationException(" +
-                    "$\"Values don\'t match: {a} Vs {ad} (\'{raw}\' serialized: {json})\");\r\n            r" +
-                    "aw = new string(\'a\', 32);\r\n            Model.eosio.CheckSum256 c = raw;\r\n       " +
-                    "     json = JsonConvert.SerializeObject(c);\r\n            var cd = JsonConvert.De" +
-                    "serializeObject<Model.eosio.CheckSum256>(json);\r\n            if (!c.Equals(cd)) " +
-                    "throw new ApplicationException($\"Values don\'t match: {c} Vs {cd} (\'{raw}\' serial" +
-                    "ized: {json})\");\r\n            raw = \"y3zra.wam\";\r\n            Model.eosio.Name n" +
-                    " = raw;\r\n            json = JsonConvert.SerializeObject(n);\r\n            var nd " +
-                    "= JsonConvert.DeserializeObject<Model.eosio.Name>(json);\r\n            if (!n.Equ" +
-                    "als(nd)) throw new ApplicationException($\"Values don\'t match: {n} Vs {nd} (\'{raw" +
-                    "}\' serialized: {json})\");\r\n            raw = \"8,WAX\";\r\n            Model.eosio.S" +
-                    "ymbol s = raw;\r\n            json = JsonConvert.SerializeObject(s);\r\n            " +
-                    "var sd = JsonConvert.DeserializeObject<Model.eosio.Symbol>(json);\r\n            i" +
-                    "f (!s.Equals(sd)) throw new ApplicationException($\"Values don\'t match: {s} Vs {s" +
-                    "d} (\'{raw}\' serialized: {json})\");\r\n            raw = \"2022-10-21T13:19:59.000\";" +
-                    "\r\n            Model.eosio.TimePoint t = raw;\r\n            json = JsonConvert.Ser" +
-                    "ializeObject(t);\r\n            var td = JsonConvert.DeserializeObject<Model.eosio" +
-                    ".TimePoint>(json);\r\n            if (!t.Equals(td)) throw new ApplicationExceptio" +
-                    "n($\"Values don\'t match: {t} Vs {td} (\'{raw}\' serialized: {json})\");\r\n           " +
-                    " // Reuse raw value\r\n            Model.eosio.TimePointSec ts = raw;\r\n           " +
-                    " json = JsonConvert.SerializeObject(ts);\r\n            var tsd = JsonConvert.Dese" +
-                    "rializeObject<Model.eosio.TimePointSec>(json);\r\n            if (!ts.Equals(tsd))" +
-                    " throw new ApplicationException($\"Values don\'t match: {ts} Vs {tsd} (\'{raw}\' ser" +
-                    "ialized: {json})\");\r\n        }\r\n    }\r\n");
+            this.Write(".Query(api);\r\n            Console.WriteLine(JsonConvert.SerializeObject(result.ro" +
+                    "ws.FirstOrDefault()));\r\n        }\r\n        public static void TestEosioTypeSeria" +
+                    "lization()\r\n        {\r\n            string raw, json;\r\n            raw = \"1.00000" +
+                    "000 WAX\";\r\n            Model.eosio.Asset a = raw;\r\n            json = JsonConver" +
+                    "t.SerializeObject(a);\r\n            var ad = JsonConvert.DeserializeObject<Model." +
+                    "eosio.Asset>(json);\r\n            if (!a.Equals(ad)) throw new ApplicationExcepti" +
+                    "on($\"Values don\'t match: {a} Vs {ad} (\'{raw}\' serialized: {json})\");\r\n          " +
+                    "  raw = new string(\'a\', 32);\r\n            Model.eosio.CheckSum256 c = raw;\r\n    " +
+                    "        json = JsonConvert.SerializeObject(c);\r\n            var cd = JsonConvert" +
+                    ".DeserializeObject<Model.eosio.CheckSum256>(json);\r\n            if (!c.Equals(cd" +
+                    ")) throw new ApplicationException($\"Values don\'t match: {c} Vs {cd} (\'{raw}\' ser" +
+                    "ialized: {json})\");\r\n            raw = \"y3zra.wam\";\r\n            Model.eosio.Nam" +
+                    "e n = raw;\r\n            json = JsonConvert.SerializeObject(n);\r\n            var " +
+                    "nd = JsonConvert.DeserializeObject<Model.eosio.Name>(json);\r\n            if (!n." +
+                    "Equals(nd)) throw new ApplicationException($\"Values don\'t match: {n} Vs {nd} (\'{" +
+                    "raw}\' serialized: {json})\");\r\n            raw = \"8,WAX\";\r\n            Model.eosi" +
+                    "o.Symbol s = raw;\r\n            json = JsonConvert.SerializeObject(s);\r\n         " +
+                    "   var sd = JsonConvert.DeserializeObject<Model.eosio.Symbol>(json);\r\n          " +
+                    "  if (!s.Equals(sd)) throw new ApplicationException($\"Values don\'t match: {s} Vs" +
+                    " {sd} (\'{raw}\' serialized: {json})\");\r\n            raw = \"2022-10-21T13:19:59.00" +
+                    "0\";\r\n            Model.eosio.TimePoint t = raw;\r\n            json = JsonConvert." +
+                    "SerializeObject(t);\r\n            var td = JsonConvert.DeserializeObject<Model.eo" +
+                    "sio.TimePoint>(json);\r\n            if (!t.Equals(td)) throw new ApplicationExcep" +
+                    "tion($\"Values don\'t match: {t} Vs {td} (\'{raw}\' serialized: {json})\");\r\n        " +
+                    "    // Reuse raw value\r\n            Model.eosio.TimePointSec ts = raw;\r\n        " +
+                    "    json = JsonConvert.SerializeObject(ts);\r\n            var tsd = JsonConvert.D" +
+                    "eserializeObject<Model.eosio.TimePointSec>(json);\r\n            if (!ts.Equals(ts" +
+                    "d)) throw new ApplicationException($\"Values don\'t match: {ts} Vs {tsd} (\'{raw}\' " +
+                    "serialized: {json})\");\r\n        }\r\n    }\r\n");
             
-            #line 731 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
+            #line 848 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
  }
 
             

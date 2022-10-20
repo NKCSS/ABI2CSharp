@@ -9,7 +9,9 @@ All of this data is available through a contract's ABI. What I propose is a util
 
 - retrieve and read an ABI (specify contract name, code will interact with the chain to get the ABI) 
 - generate C# code that gives constants with contract, table and action names 
-- generates C# models so you can easily execute GetTableRows in [EosSharp](https://github.com/GetScatter/eos-sharp) for instance (you need to feed the type) and the data for Actions you want to execute. 
+- generates C# models so you can easily execute GetTableRows in [EosSharp](https://github.com/NKCSS/eos-sharp) for instance (you need to feed the type) and the data for Actions you want to execute. 
+
+NOTE: I forked EosSharp to fix some small things; using the default package might not work for you, so be ware/apply patches where needed.
 
 This will greatly help writing code to interact with the chain.
 
@@ -61,3 +63,99 @@ The last two parameters can be swapped as long as one is a valid number and the 
 [![Telegram](https://img.shields.io/badge/Telegram-2CA5E0?style=for-the-badge&logo=telegram&logoColor=white)
 ](https://t.me/NicksTechdom)[![YouTube](https://img.shields.io/badge/YouTube-%23FF0000.svg?style=for-the-badge&logo=YouTube&logoColor=white)
 ](https://nick.yt)
+
+
+### Example program using generated `eosio` code
+
+```
+using EosSharp;
+using EosSharp.Core;
+using EosSharp.Core.Api.v1;
+using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+
+namespace Abi2CSharp
+{
+    public static class VoterClaim
+    {
+        const int secondsPerDay = 60 * 60 * 24;
+        // Feel free to just hard-code those values here/use your own way to load your wallet data.
+        //NOTE: Make sure to never commit sensitive data to public repositories😅
+        static (string address, string pub, string priv) accountInfo = (AutoMappedConfig.account, AutoMappedConfig.publicKey, AutoMappedConfig.privateKey);
+        const string transactionMarker = "\"transaction_id\":";
+        static int start;
+        static string GetTransactionIdFromJSON(string json) => (start = json.IndexOf(transactionMarker) + transactionMarker.Length + 1) > transactionMarker.Length ? json.Substring(start, json.IndexOf(',', start) - (start + 1)) : null;
+        public static async Task CheckAndClaimVote()
+        {
+            Model.eosio.Name wallet = accountInfo.address;
+            var api = new EosApi(new EosConfigurator()
+            {
+                SignProvider = new EosSharp.Core.Providers.DefaultSignProvider(accountInfo.priv),
+                HttpEndpoint = AutoMappedConfig.api,
+                ChainId = AutoMappedConfig.chainId
+            }, new HttpHandler());
+            var wax = new Eos(api.Config);
+            var abiSerializer = new EosSharp.Core.Providers.AbiSerializationProvider(api);
+
+            var voteInfo = (await Contracts.eosio.Tables.voters.Query(api, lowerBound: wallet, upperBound: wallet)).rows.FirstOrDefault(); // There might not be vote info
+            Console.WriteLine($"Last claim: {voteInfo?.last_claim_time.Moment:yyyy-MM-dd HH:mm:ss}");
+            if (voteInfo == null) 
+            {
+                Console.WriteLine("No vote info found; make sure to vote first!");
+            }
+            else
+            {
+                var waxGlobal = (await Contracts.eosio.Tables.global.Query(api)).rows[0];
+                Console.WriteLine(JsonConvert.SerializeObject(waxGlobal));
+                var secondsElapsed = DateTime.UtcNow.Subtract(voteInfo.unpaid_voteshare_last_updated.Moment).TotalSeconds;
+                if (secondsElapsed > secondsPerDay)
+                {
+                    var unpaid_voteshare = voteInfo.unpaid_voteshare + (voteInfo.unpaid_voteshare_change_rate * secondsElapsed);
+                    var reward = waxGlobal.voters_bucket * (unpaid_voteshare / waxGlobal.total_unpaid_voteshare);
+                    Console.WriteLine($"Voter Claimable: {(reward / 1e8):F8} WAX");
+                    var action = Contracts.eosio.Requests.voterclaim.CreateAction(wallet, new Contracts.eosio.Types.voterclaim { owner = wallet });
+                    var trx = new Transaction()
+                    {
+                        max_net_usage_words = 0,
+                        max_cpu_usage_ms = 0,
+                        delay_sec = 0,
+                        context_free_actions = new List<EosSharp.Core.Api.v1.Action>(),
+                        transaction_extensions = new List<Extension>(),
+                        actions = new List<EosSharp.Core.Api.v1.Action> { action },
+                    };
+                    var packedTrx = await abiSerializer.SerializePackedTransaction(trx);
+                    var requiredKeys = new List<string>() { accountInfo.pub };
+                    var signatures = await api.Config.SignProvider.Sign(api.Config.ChainId, requiredKeys, packedTrx);
+                    try
+                    {
+                        string result = await wax.CreateTransaction(trx);
+                        string tx = GetTransactionIdFromJSON(result);
+                        if (!string.IsNullOrWhiteSpace(tx)) Console.WriteLine(tx);
+                        else Console.WriteLine(result);
+                    }
+                    catch (EosSharp.Core.Exceptions.ApiErrorException aeex)
+                    {
+                        Console.WriteLine("An error occured:");
+                        var parts = aeex.error.details.FirstOrDefault()?.message?.Split(':');
+                        if ((parts?.Length ?? 0) > 1)
+                        {
+                            Console.WriteLine(parts[1].Trim());
+                        }
+                        else
+                        {
+                            Console.WriteLine(string.Join(Environment.NewLine, aeex.error.details.Select(x => x.message)));
+                        }
+                    }
+                }
+                else
+                {
+                    Console.WriteLine($"Too early to claim voter pay (wait {voteInfo.unpaid_voteshare_last_updated.Moment.AddDays(1).Subtract(DateTime.UtcNow)})");
+                }
+            }
+        }
+    }
+}
+```

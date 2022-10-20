@@ -5,10 +5,8 @@
 <#@ import namespace="System.Collections.Generic" #>
 // Auto Generated, do not edit.
 <# if (includeEosioModels) { #>
-using System;
 using System.Globalization;
 using System.IO;
-using Newtonsoft.Json;
 using AlterMe.Model.eosio;
 <# } 
 if (includeEosSharpTest)
@@ -18,28 +16,119 @@ using EosSharp.Core;
 using EosSharp.Core.Api.v1;
 using System.Net.Http;
 using System.Linq;
+<# } 
+if (includeEosSharpTest || includeEosioModels)
+{ #>
+using System;
+using Newtonsoft.Json;
 <# } #>
 using System.Collections.Generic;
 using System.Threading.Tasks;
 <#
+HashSet<string> ReservedKeyWords = new HashSet<string> {
+    "abstract",
+    "as",
+    "base",
+    "bool",
+    "break",
+    "byte",
+    "case",
+    "catch",
+    "char",
+    "checked",
+    "class",
+    "const",
+    "continue",
+    "decimal",
+    "default",
+    "delegate",
+    "do",
+    "double",
+    "else",
+    "enum",
+    "event",
+    "explicit",
+    "extern",
+    "false",
+    "finally",
+    "fixed",
+    "float",
+    "for",
+    "foreach",
+    "goto",
+    "if",
+    "implicit",
+    "in",
+    "int",
+    "interface",
+    "internal",
+    "is",
+    "lock",
+    "long",
+    "namespace",
+    "new",
+    "null",
+    "object",
+    "operator",
+    "out",
+    "override",
+    "params",
+    "private",
+    "protected",
+    "public",
+    "readonly",
+    "ref",
+    "return",
+    "sbyte",
+    "sealed",
+    "short",
+    "sizeof",
+    "stackalloc",
+    "static",
+    "string",
+    "struct",
+    "switch",
+    "this",
+    "throw",
+    "true",
+    "try",
+    "typeof",
+    "uint",
+    "ulong",
+    "unchecked",
+    "unsafe",
+    "ushort",
+    "using",
+    "virtual",
+    "void",
+    "volatile",
+    "while"
+};
 int lowerBound = (int)'0', upperBound = (int)'9';
-Func<string, string, string> getSafeName = (name, prefix) => {
+Func<string, string, string> getSafeTypeName = (name, prefix) => {
     if (name.StartsWith("Model.eosio.")) return name;
     int firstCharCode = (int)name[0];
     return ((firstCharCode < lowerBound || firstCharCode > upperBound) ? name : $"{prefix}{name}").Replace('.','_');
 };
+Func<string, string, string, string> getSafeFieldName = (name, prefix, parentType) => {
+    if (ReservedKeyWords.Contains(name)) return $"@{name}";
+    else if (!string.IsNullOrWhiteSpace(parentType) && parentType == name) return $"@{name}";
+    int firstCharCode = (int)name[0];
+    return ((firstCharCode < lowerBound || firstCharCode > upperBound) ? name : $"{prefix}{name}");
+};
+string contractClassTypeName = getSafeTypeName(exportName, "c_");
 #>
-namespace AlterMe
+namespace Abi2CSharp
 {
     public static partial class Contracts
-    {    
-        public static class <#= getSafeName(exportName, "c_") #>
+    {
+        public static class <#= contractClassTypeName #>
         {
             public const string contract = "<#= contractName #>";
             public static class Actions
             {
 <# foreach (var action in actions) { 
-    string name = getSafeName(action.name, "t_");
+    string name = getSafeTypeName(action.name, "t_");
     if(name == action.name)
     { #>
                 public const string <#= name #> = nameof(<#= name #>);
@@ -51,12 +140,29 @@ namespace AlterMe
             public static class Tables
             {
 <# foreach (var table in tables) { 
-    string name = getSafeName(table.name, "t_");
-    if(name == table.name)
+    string name = getSafeTypeName(table.name, "t_");
+    string typeNameName = getSafeTypeName(table.type, "t_");
     { #>
-                public const string <#= name #> = nameof(<#= name #>);
-<#  } else { #>
-                public const string <#= name #> = "<#= table.name #>";
+                // Rows are of type <#= typeNameName #>. If you want helper code generated, enable includeEosSharpTest
+                public static class <#= name #>
+                {
+                    public const string TableName = "<#= table.name #>";
+<# if (includeEosSharpTest) { #>
+                    public static Task<GetTableRowsResponse<Types.<#= typeNameName #>>> Query(EosApi api, bool reverse = false, uint? keyIndex = null, string lowerBound = null, string upperBound = null, string scope = null) 
+                        => api.GetTableRows<Types.<#= typeNameName #>>(new GetTableRowsRequest()
+                        {
+                            json = true,
+                            code = Contracts.<#= contractClassTypeName #>.contract,
+                            scope = scope ?? Contracts.<#= contractClassTypeName #>.contract,
+                            table = Contracts.<#= contractClassTypeName #>.Tables.<#= name #>.TableName,
+                            reverse = reverse,
+                            show_payer = false,
+                            index_position = keyIndex,
+                            lower_bound = lowerBound,
+                            upper_bound = upperBound
+                        });
+<# } #>
+                }
 <#  }
 } #>
             }
@@ -66,17 +172,18 @@ namespace AlterMe
                 public interface <#= i #> { }
 <# } #>
 <# foreach (var type in types.Keys) { 
+    string className = getSafeTypeName(type, "t_");
     if (variantUsageLookup.TryGetValue(type, out var interfaces))
     { #>
-                public class <#= getSafeName(type, "t_") #> : <#= string.Join(", ", interfaces) #> {
+                public class <#= className #> : <#= string.Join(", ", interfaces) #> {
 <#  }
     else
     { #>
-                public class <#= getSafeName(type, "t_") #> {
+                public class <#= className #> {
 <#  }
 foreach (var field in types[type])
     { #>
-                    public <#= getSafeName(field.Value, "t_") #> <#= field.Key #>  { get; set; }
+                    public <#= getSafeTypeName(field.Value, "t_") #> <#= getSafeFieldName(field.Key, "t_", className) #>  { get; set; }
 <#  }
 #>
                 }
@@ -84,16 +191,32 @@ foreach (var field in types[type])
             }
             public static class Requests
             {
-<# foreach (var action in actions) { #>
-                public class <#= getSafeName(action.name, "t_") #> : Types.<#= getSafeName(action.type, "t_") #>
-                {
+                const string DefaultPermission = "active";
+<# foreach (var action in actions) { 
+    string classNameSafe = getSafeTypeName(action.name, "t_");
+#>
+                public class <#= classNameSafe #> : Types.<#= getSafeTypeName(action.type, "t_") #>
+                {                
+<# if (includeEosSharpTest)
+{ #>
+                    public static EosSharp.Core.Api.v1.Action CreateAction(Model.eosio.Name wallet, Types.<#= classNameSafe #> data) => CreateAction(wallet, data, DefaultPermission);
+                    public static EosSharp.Core.Api.v1.Action CreateAction(Model.eosio.Name wallet, Types.<#= classNameSafe #> data, Model.eosio.Name permission)
+                        =>
+                        new EosSharp.Core.Api.v1.Action()
+                        {
+                            account = contract,
+                            name = Actions.<#= classNameSafe #>,
+                            authorization = new List<PermissionLevel>() { new PermissionLevel() { actor = wallet, permission = permission } },
+                            data = data
+                        };
+<# } #>
                 }
 <#} #>
             }
             public static class Responses
             {
 <# foreach (var table in tables) { #>
-                public class <#= getSafeName(table.name, "t_") #> : Types.<#= getSafeName(table.type, "t_") #>
+                public class <#= getSafeTypeName(table.name, "t_") #> : Types.<#= getSafeTypeName(table.type, "t_") #>
                 {
                 }
 <#} #>
@@ -671,7 +794,9 @@ foreach (var field in types[type])
 	} 
 <# }
 if (includeEosSharpTest)
-{ #>
+{ 
+    string safeExportName = getSafeTypeName(exportName, "c_");
+#>
     public static class Test
     {
         public static async Task Run()
@@ -682,15 +807,7 @@ if (includeEosSharpTest)
                 HttpEndpoint = "<#= api #>",
                 ChainId = "<#= chainId #>"
             }, new HttpHandler());
-            var result = await api.GetTableRows<Contracts.<#= getSafeName(exportName, "c_") #>.Responses.<#= getSafeName(tables[0].name, "c_") #>>(new GetTableRowsRequest()
-            {
-                json = true,
-                code = Contracts.<#= getSafeName(exportName, "c_") #>.contract,
-                scope = Contracts.<#= getSafeName(exportName, "c_") #>.contract,
-                table = Contracts.<#= getSafeName(exportName, "c_") #>.Tables.<#= getSafeName(tables[0].name, "c_") #>,
-                reverse = false,
-                show_payer = false,
-            });
+            var result = await Contracts.<#= safeExportName #>.Tables.<#= getSafeTypeName(tables[0].name, "c_") #>.Query(api);
             Console.WriteLine(JsonConvert.SerializeObject(result.rows.FirstOrDefault()));
         }
         public static void TestEosioTypeSerialization()
