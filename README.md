@@ -58,13 +58,6 @@ The last two parameters can be swapped as long as one is a valid number and the 
 
 **Note:** ABI's are cached; if you want to make sure they are re-downloaded from chain, delete the cache file inside the `./abis/` folder.
 
-
-[![Twitter URL](https://img.shields.io/twitter/url/https/twitter.com/NKCSS.svg?style=social&label=Follow%20%40NKCSS)](https://twitter.com/NKCSS) 
-[![Telegram](https://img.shields.io/badge/Telegram-2CA5E0?style=for-the-badge&logo=telegram&logoColor=white)
-](https://t.me/NicksTechdom)[![YouTube](https://img.shields.io/badge/YouTube-%23FF0000.svg?style=for-the-badge&logo=YouTube&logoColor=white)
-](https://nick.yt)
-
-
 ### Example program using generated `eosio` code
 
 ```csharp
@@ -87,7 +80,10 @@ namespace Abi2CSharp
         static (string address, string pub, string priv) accountInfo = (AutoMappedConfig.account, AutoMappedConfig.publicKey, AutoMappedConfig.privateKey);
         const string transactionMarker = "\"transaction_id\":";
         static int start;
-        static string GetTransactionIdFromJSON(string json) => (start = json.IndexOf(transactionMarker) + transactionMarker.Length + 1) > transactionMarker.Length ? json.Substring(start, json.IndexOf(',', start) - (start + 1)) : null;
+        static string GetTransactionIdFromJSON(string json) 
+            => (start = json.IndexOf(transactionMarker) + transactionMarker.Length + 1) > transactionMarker.Length 
+                ? json.Substring(start, json.IndexOf(',', start) - (start + 1)) 
+                : null;
         public static async Task CheckAndClaimVote()
         {
             Model.eosio.Name wallet = accountInfo.address;
@@ -159,3 +155,10 @@ namespace Abi2CSharp
     }
 }
 ```
+
+### Contant me
+
+[![Twitter URL](https://img.shields.io/twitter/url/https/twitter.com/NKCSS.svg?style=social&label=Follow%20%40NKCSS)](https://twitter.com/NKCSS) 
+[![Telegram](https://img.shields.io/badge/Telegram-2CA5E0?style=for-the-badge&logo=telegram&logoColor=white)
+](https://t.me/NicksTechdom)[![YouTube](https://img.shields.io/badge/YouTube-%23FF0000.svg?style=for-the-badge&logo=YouTube&logoColor=white)
+](https://nick.yt)
