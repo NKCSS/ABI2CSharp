@@ -24,6 +24,8 @@ namespace Abi2CSharp
             { "asset", "Model.eosio.Asset" },
             { "symbol", "Model.eosio.Symbol" },
             { "checksum256", "Model.eosio.CheckSum256" },
+            { "time_point", "Model.eosio.TimePoint" },
+            { "time_point_sec", "Model.eosio.TimePointSec" },
             { "uint64", "ulong" },
             { "uint32", "uint" },
             { "uint16", "ushort" },
@@ -32,6 +34,7 @@ namespace Abi2CSharp
             { "int32", "int" },
             { "int16", "short" },
             { "int8", "byte" },
+            { "float32", "Single" },
             { "float64", "double" },
         };
         #endregion
