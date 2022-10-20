@@ -67,7 +67,7 @@ The last two parameters can be swapped as long as one is a valid number and the 
 
 ### Example program using generated `eosio` code
 
-```
+```csharp
 using EosSharp;
 using EosSharp.Core;
 using EosSharp.Core.Api.v1;
