@@ -189,7 +189,7 @@ id: 1099659607557 ready @ 2022-10-22 16:45:41 (100 HP, 21 DAMAGE, 21 ARMOUR)
 id: 1099599655455 ready @ 2022-10-22 17:08:20 (100 HP, 21 DAMAGE, 13 ARMOUR)
 ```
 
-### Contant me
+### Contact me
 
 [![Twitter URL](https://img.shields.io/twitter/url/https/twitter.com/NKCSS.svg?style=social&label=Follow%20%40NKCSS)](https://twitter.com/NKCSS) 
 [![Telegram](https://img.shields.io/badge/Telegram-2CA5E0?style=for-the-badge&logo=telegram&logoColor=white)
