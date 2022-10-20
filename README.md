@@ -156,7 +156,7 @@ namespace Abi2CSharp
 }
 ```
 
-### Example snipper to query your Multiplayer Runs from ZOS (Zombie Outbreak Survivor)
+### Example snippet to query your Multiplayer Runs from ZOS (Zombie Outbreak Survivor)
 
 ```csharp
 // Code below expect you to have executed the code against 'multi.zos'.
