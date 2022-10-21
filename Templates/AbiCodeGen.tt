@@ -104,15 +104,15 @@ HashSet<string> ReservedKeyWords = new HashSet<string> {
     "volatile",
     "while"
 };
+Dictionary<string, string> classRemap = new Dictionary<string, string>();
 int lowerBound = (int)'0', upperBound = (int)'9';
 Func<string, string, string> getSafeTypeName = (name, prefix) => {
     if (name.StartsWith("Model.eosio.")) return name;
     int firstCharCode = (int)name[0];
     return ((firstCharCode < lowerBound || firstCharCode > upperBound) ? name : $"{prefix}{name}").Replace('.','_');
 };
-Func<string, string, string, string> getSafeFieldName = (name, prefix, parentType) => {
+Func<string, string, string> getSafeFieldName = (name, prefix) => {
     if (ReservedKeyWords.Contains(name)) return $"@{name}";
-    else if (!string.IsNullOrWhiteSpace(parentType) && parentType == name) return $"@{name}";
     int firstCharCode = (int)name[0];
     return ((firstCharCode < lowerBound || firstCharCode > upperBound) ? name : $"{prefix}{name}");
 };
@@ -173,7 +173,18 @@ namespace Abi2CSharp
                 public interface <#= i #> { }
 <# } #>
 <# foreach (var type in types.Keys) { 
-    string className = getSafeTypeName(type, "t_");
+    var fields = types[type];
+    string className;
+    // Check if there are any children with the same name as their parent class; if so, we need to change the parent class due to serialization limitations of EosSharp.
+    if (fields.Any(f => f.Key == type))
+    {
+        className = $"c_{type}";
+        classRemap.Add(type, className);
+    }
+    else
+    {
+        className = getSafeTypeName(type, "t_");
+    }
     if (variantUsageLookup.TryGetValue(type, out var interfaces))
     { #>
                 public class <#= className #> : <#= string.Join(", ", interfaces) #> {
@@ -184,7 +195,7 @@ namespace Abi2CSharp
 <#  }
 foreach (var field in types[type])
     { #>
-                    public <#= getSafeTypeName(field.Value, "t_") #> <#= getSafeFieldName(field.Key, "t_", className) #>  { get; set; }
+                    public <#= getSafeTypeName(field.Value, "t_") #> <#= getSafeFieldName(field.Key, "t_") #>  { get; set; }
 <#  }
 #>
                 }
@@ -194,14 +205,16 @@ foreach (var field in types[type])
             {
                 const string DefaultPermission = "active";
 <# foreach (var action in actions) { 
-    string classNameSafe = getSafeTypeName(action.name, "t_");
+    string 
+        classNameSafe = getSafeTypeName(action.name, "t_"),
+        underlyingType = getSafeTypeName(classRemap.TryGetValue(action.type, out string remapped) ? remapped : action.type, "t_");
 #>
-                public class <#= classNameSafe #> : Types.<#= getSafeTypeName(action.type, "t_") #>
+                public class <#= classNameSafe #> : Types.<#= underlyingType #>
                 {                
 <# if (includeEosSharpTest)
 { #>
-                    public static EosSharp.Core.Api.v1.Action CreateAction(Model.eosio.Name wallet, Types.<#= classNameSafe #> data) => CreateAction(wallet, data, DefaultPermission);
-                    public static EosSharp.Core.Api.v1.Action CreateAction(Model.eosio.Name wallet, Types.<#= classNameSafe #> data, Model.eosio.Name permission)
+                    public static EosSharp.Core.Api.v1.Action CreateAction(Model.eosio.Name wallet, Types.<#= underlyingType #> data) => CreateAction(wallet, data, DefaultPermission);
+                    public static EosSharp.Core.Api.v1.Action CreateAction(Model.eosio.Name wallet, Types.<#= underlyingType #> data, Model.eosio.Name permission)
                         =>
                         new EosSharp.Core.Api.v1.Action()
                         {
