@@ -275,9 +275,9 @@ string contractClassTypeName = getSafeTypeName(exportName, "c_");
             
             #line default
             #line hidden
-            this.Write(">> Query(EosApi api, bool reverse = false, uint? keyIndex = null, string lowerBou" +
-                    "nd = null, string upperBound = null, string scope = null, int maxResults = 10) \r" +
-                    "\n                        => api.GetTableRows<Types.");
+            this.Write(">> Query(EosApi api, bool reverse = false, uint? keyIndex = null, string search =" +
+                    " null, string lowerBound = null, string upperBound = null, string scope = null, " +
+                    "int maxResults = 10) \r\n                        => api.GetTableRows<Types.");
             
             #line 152 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(typeNameName));
@@ -317,8 +317,8 @@ string contractClassTypeName = getSafeTypeName(exportName, "c_");
                             reverse = reverse,
                             show_payer = false,
                             index_position = keyIndex,
-                            lower_bound = lowerBound,
-                            upper_bound = upperBound,
+                            lower_bound = search ?? lowerBound,
+                            upper_bound = search ?? upperBound,
                             limit = maxResults,
                         });
 ");
