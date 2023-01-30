@@ -51,7 +51,7 @@ namespace Abi2CSharp
         {
             if ((args?.Length ?? 0) == 0)
             {
-                Console.WriteLine("Please speicfy the contract you want to generate code for. Optionally, also specify the block, and the classname to export.");
+                Console.WriteLine("Please specify the contract you want to generate code for. Optionally, also specify the block, and the classname to export.");
             }
             else
             {

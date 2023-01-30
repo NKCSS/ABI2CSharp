@@ -7,7 +7,7 @@
 <# if (includeEosioModels) { #>
 using System.Globalization;
 using System.IO;
-using AlterMe.Model.eosio;
+using Abi2CSharp.Model.eosio;
 <# } 
 if (includeEosSharpTest)
 { #>
@@ -561,7 +561,8 @@ foreach (var field in types[type])
         public class CheckSum256 : ICustomSerialize<CheckSum256>
         {
             const int BitsPerByte = 8;
-            const int ExpectedLength = 256 / BitsPerByte;
+            const int HexCharsPerByte = 2;
+            internal const int ExpectedLength = (256 / BitsPerByte) * 2;
             byte[] _Raw;
             string _AsString;
             public byte[] Raw
@@ -822,7 +823,7 @@ if (includeEosSharpTest)
                 ChainId = "<#= chainId #>"
             }, new HttpHandler());
             var result = await Contracts.<#= safeExportName #>.Tables.<#= getSafeTypeName(tables[0].name, "c_") #>.Query(api);
-            Console.WriteLine(JsonConvert.SerializeObject(result.rows.FirstOrDefault()));
+            Console.WriteLine($"First row from {Contracts.<#= safeExportName #>.Tables.<#= getSafeTypeName(tables[0].name, "c_") #>.TableName} table: {JsonConvert.SerializeObject(result.rows.FirstOrDefault())}");
         }
         public static void TestEosioTypeSerialization()
         {
@@ -832,7 +833,7 @@ if (includeEosSharpTest)
             json = JsonConvert.SerializeObject(a);
             var ad = JsonConvert.DeserializeObject<Model.eosio.Asset>(json);
             if (!a.Equals(ad)) throw new ApplicationException($"Values don't match: {a} Vs {ad} ('{raw}' serialized: {json})");
-            raw = new string('a', 32);
+            raw = new string('a', CheckSum256.ExpectedLength);
             Model.eosio.CheckSum256 c = raw;
             json = JsonConvert.SerializeObject(c);
             var cd = JsonConvert.DeserializeObject<Model.eosio.CheckSum256>(json);
