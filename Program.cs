@@ -61,7 +61,7 @@ namespace Abi2CSharp
                 var abiDir = new DirectoryInfo(AutoMappedConfig.abiFolder);
                 if (!abiDir.Exists)
                 {
-                    Console.WriteLine($"ABI folder not found, trying to create it (if it fails, creater it manualyl or give this programm more rights): {abiDir.FullName}");
+                    Console.WriteLine($"ABI folder not found, trying to create it (if it fails, creater it manually or give this programm more rights): {abiDir.FullName}");
                     abiDir.Create();
                 }
                 var abisPerContract = abiDir.GetFiles($"*{AutoMappedConfig.abiFileSeparator}{AutoMappedConfig.abiFileSuffix}");
