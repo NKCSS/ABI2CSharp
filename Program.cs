@@ -22,6 +22,7 @@ namespace Abi2CSharp
         public static Dictionary<string, string> AbiTypeMapping = new Dictionary<string, string> {
             { "name", "Model.eosio.Name"},
             { "asset", "Model.eosio.Asset" },
+            { "extended_asset", "Model.eosio.ExtendedAsset" },
             { "symbol", "Model.eosio.Symbol" },
             { "checksum256", "Model.eosio.CheckSum256" },
             { "time_point", "Model.eosio.TimePoint" },

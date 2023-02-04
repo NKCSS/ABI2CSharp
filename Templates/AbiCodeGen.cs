@@ -18,7 +18,7 @@ namespace Abi2CSharp.Templates
     /// Class to produce the template output
     /// </summary>
     
-    #line 1 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
+    #line 1 "C:\GIT\ABI2CSharp\Templates\AbiCodeGen.tt"
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.TextTemplating", "17.0.0.0")]
     public partial class AbiCodeGen : AbiCodeGenBase
     {
@@ -30,14 +30,14 @@ namespace Abi2CSharp.Templates
         {
             this.Write("// Auto Generated, do not edit.\r\n");
             
-            #line 7 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
+            #line 7 "C:\GIT\ABI2CSharp\Templates\AbiCodeGen.tt"
  if (includeEosioModels) { 
             
             #line default
             #line hidden
             this.Write("using System.Globalization;\r\nusing System.IO;\r\nusing Abi2CSharp.Model.eosio;\r\n");
             
-            #line 11 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
+            #line 11 "C:\GIT\ABI2CSharp\Templates\AbiCodeGen.tt"
  } 
 if (includeEosSharpTest)
 { 
@@ -47,7 +47,7 @@ if (includeEosSharpTest)
             this.Write("using EosSharp;\r\nusing EosSharp.Core;\r\nusing EosSharp.Core.Api.v1;\r\nusing System." +
                     "Net.Http;\r\nusing System.Linq;\r\n");
             
-            #line 19 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
+            #line 19 "C:\GIT\ABI2CSharp\Templates\AbiCodeGen.tt"
  } 
 if (includeEosSharpTest || includeEosioModels)
 { 
@@ -56,14 +56,14 @@ if (includeEosSharpTest || includeEosioModels)
             #line hidden
             this.Write("using System;\r\nusing Newtonsoft.Json;\r\n");
             
-            #line 24 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
+            #line 24 "C:\GIT\ABI2CSharp\Templates\AbiCodeGen.tt"
  } 
             
             #line default
             #line hidden
             this.Write("using System.Collections.Generic;\r\nusing System.Threading.Tasks;\r\n");
             
-            #line 27 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
+            #line 27 "C:\GIT\ABI2CSharp\Templates\AbiCodeGen.tt"
 
 HashSet<string> ReservedKeyWords = new HashSet<string> {
     "abstract",
@@ -162,23 +162,23 @@ string contractClassTypeName = getSafeTypeName(exportName, "c_");
             #line default
             #line hidden
             this.Write("namespace Abi2CSharp\r\n{\r\n    public static partial class Contracts\r\n    {\r\n      " +
-                    "  public static class ");
+                    "  public static partial class ");
             
-            #line 125 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
+            #line 125 "C:\GIT\ABI2CSharp\Templates\AbiCodeGen.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(contractClassTypeName));
             
             #line default
             #line hidden
             this.Write("\r\n        {\r\n            public const string contract = \"");
             
-            #line 127 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
+            #line 127 "C:\GIT\ABI2CSharp\Templates\AbiCodeGen.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(contractName));
             
             #line default
             #line hidden
             this.Write("\";\r\n            public static class Actions\r\n            {\r\n");
             
-            #line 130 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
+            #line 130 "C:\GIT\ABI2CSharp\Templates\AbiCodeGen.tt"
  foreach (var action in actions) { 
     string name = getSafeTypeName(action.name, "t_");
     if(name == action.name)
@@ -188,42 +188,42 @@ string contractClassTypeName = getSafeTypeName(exportName, "c_");
             #line hidden
             this.Write("                public const string ");
             
-            #line 134 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
+            #line 134 "C:\GIT\ABI2CSharp\Templates\AbiCodeGen.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(name));
             
             #line default
             #line hidden
             this.Write(" = nameof(");
             
-            #line 134 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
+            #line 134 "C:\GIT\ABI2CSharp\Templates\AbiCodeGen.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(name));
             
             #line default
             #line hidden
             this.Write(");\r\n");
             
-            #line 135 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
+            #line 135 "C:\GIT\ABI2CSharp\Templates\AbiCodeGen.tt"
   } else { 
             
             #line default
             #line hidden
             this.Write("                public const string ");
             
-            #line 136 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
+            #line 136 "C:\GIT\ABI2CSharp\Templates\AbiCodeGen.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(name));
             
             #line default
             #line hidden
             this.Write(" = \"");
             
-            #line 136 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
+            #line 136 "C:\GIT\ABI2CSharp\Templates\AbiCodeGen.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(action.name));
             
             #line default
             #line hidden
             this.Write("\";\r\n");
             
-            #line 137 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
+            #line 137 "C:\GIT\ABI2CSharp\Templates\AbiCodeGen.tt"
   }
 } 
             
@@ -231,7 +231,7 @@ string contractClassTypeName = getSafeTypeName(exportName, "c_");
             #line hidden
             this.Write("            }\r\n            public static class Tables\r\n            {\r\n");
             
-            #line 142 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
+            #line 142 "C:\GIT\ABI2CSharp\Templates\AbiCodeGen.tt"
  foreach (var table in tables) { 
     string name = getSafeTypeName(table.name, "t_");
     string typeNameName = getSafeTypeName(table.type, "t_");
@@ -241,7 +241,7 @@ string contractClassTypeName = getSafeTypeName(exportName, "c_");
             #line hidden
             this.Write("                // Rows are of type ");
             
-            #line 146 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
+            #line 146 "C:\GIT\ABI2CSharp\Templates\AbiCodeGen.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(typeNameName));
             
             #line default
@@ -249,28 +249,28 @@ string contractClassTypeName = getSafeTypeName(exportName, "c_");
             this.Write(". If you want helper code generated, enable includeEosSharpTest\r\n                " +
                     "public static class ");
             
-            #line 147 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
+            #line 147 "C:\GIT\ABI2CSharp\Templates\AbiCodeGen.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(name));
             
             #line default
             #line hidden
             this.Write("\r\n                {\r\n                    public const string TableName = \"");
             
-            #line 149 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
+            #line 149 "C:\GIT\ABI2CSharp\Templates\AbiCodeGen.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(table.name));
             
             #line default
             #line hidden
             this.Write("\";\r\n");
             
-            #line 150 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
+            #line 150 "C:\GIT\ABI2CSharp\Templates\AbiCodeGen.tt"
  if (includeEosSharpTest) { 
             
             #line default
             #line hidden
             this.Write("                    public static Task<GetTableRowsResponse<Types.");
             
-            #line 151 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
+            #line 151 "C:\GIT\ABI2CSharp\Templates\AbiCodeGen.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(typeNameName));
             
             #line default
@@ -279,7 +279,7 @@ string contractClassTypeName = getSafeTypeName(exportName, "c_");
                     " null, string lowerBound = null, string upperBound = null, string scope = null, " +
                     "int maxResults = 10) \r\n                        => api.GetTableRows<Types.");
             
-            #line 152 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
+            #line 152 "C:\GIT\ABI2CSharp\Templates\AbiCodeGen.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(typeNameName));
             
             #line default
@@ -287,28 +287,28 @@ string contractClassTypeName = getSafeTypeName(exportName, "c_");
             this.Write(">(new GetTableRowsRequest()\r\n                        {\r\n                         " +
                     "   json = true,\r\n                            code = Contracts.");
             
-            #line 155 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
+            #line 155 "C:\GIT\ABI2CSharp\Templates\AbiCodeGen.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(contractClassTypeName));
             
             #line default
             #line hidden
             this.Write(".contract,\r\n                            scope = scope ?? Contracts.");
             
-            #line 156 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
+            #line 156 "C:\GIT\ABI2CSharp\Templates\AbiCodeGen.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(contractClassTypeName));
             
             #line default
             #line hidden
             this.Write(".contract,\r\n                            table = Contracts.");
             
-            #line 157 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
+            #line 157 "C:\GIT\ABI2CSharp\Templates\AbiCodeGen.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(contractClassTypeName));
             
             #line default
             #line hidden
             this.Write(".Tables.");
             
-            #line 157 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
+            #line 157 "C:\GIT\ABI2CSharp\Templates\AbiCodeGen.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(name));
             
             #line default
@@ -323,42 +323,42 @@ string contractClassTypeName = getSafeTypeName(exportName, "c_");
                         });
 ");
             
-            #line 165 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
+            #line 165 "C:\GIT\ABI2CSharp\Templates\AbiCodeGen.tt"
  } 
             
             #line default
             #line hidden
             this.Write("                }\r\n");
             
-            #line 167 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
+            #line 167 "C:\GIT\ABI2CSharp\Templates\AbiCodeGen.tt"
   }
 } 
             
             #line default
             #line hidden
-            this.Write("            }\r\n            public static class Types\r\n            {\r\n");
+            this.Write("            }\r\n            public static partial class Types\r\n            {\r\n");
             
-            #line 172 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
+            #line 172 "C:\GIT\ABI2CSharp\Templates\AbiCodeGen.tt"
  foreach (string i in VariantInterfaces) { 
             
             #line default
             #line hidden
             this.Write("                public interface ");
             
-            #line 173 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
+            #line 173 "C:\GIT\ABI2CSharp\Templates\AbiCodeGen.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(i));
             
             #line default
             #line hidden
             this.Write(" { }\r\n");
             
-            #line 174 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
+            #line 174 "C:\GIT\ABI2CSharp\Templates\AbiCodeGen.tt"
  } 
             
             #line default
             #line hidden
             
-            #line 175 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
+            #line 175 "C:\GIT\ABI2CSharp\Templates\AbiCodeGen.tt"
  foreach (var type in types.Keys) { 
     var fields = types[type];
     string className;
@@ -377,39 +377,39 @@ string contractClassTypeName = getSafeTypeName(exportName, "c_");
             
             #line default
             #line hidden
-            this.Write("                public class ");
+            this.Write("                public partial class ");
             
-            #line 190 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
+            #line 190 "C:\GIT\ABI2CSharp\Templates\AbiCodeGen.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(className));
             
             #line default
             #line hidden
             this.Write(" : ");
             
-            #line 190 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
+            #line 190 "C:\GIT\ABI2CSharp\Templates\AbiCodeGen.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(string.Join(", ", interfaces)));
             
             #line default
             #line hidden
             this.Write(" {\r\n");
             
-            #line 191 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
+            #line 191 "C:\GIT\ABI2CSharp\Templates\AbiCodeGen.tt"
   }
     else
     { 
             
             #line default
             #line hidden
-            this.Write("                public class ");
+            this.Write("                public partial class ");
             
-            #line 194 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
+            #line 194 "C:\GIT\ABI2CSharp\Templates\AbiCodeGen.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(className));
             
             #line default
             #line hidden
             this.Write(" {\r\n");
             
-            #line 195 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
+            #line 195 "C:\GIT\ABI2CSharp\Templates\AbiCodeGen.tt"
   }
 foreach (var field in types[type])
     { 
@@ -418,21 +418,21 @@ foreach (var field in types[type])
             #line hidden
             this.Write("                    public ");
             
-            #line 198 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
+            #line 198 "C:\GIT\ABI2CSharp\Templates\AbiCodeGen.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(getSafeTypeName(field.Value, "t_")));
             
             #line default
             #line hidden
             this.Write(" ");
             
-            #line 198 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
+            #line 198 "C:\GIT\ABI2CSharp\Templates\AbiCodeGen.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(getSafeFieldName(field.Key, "t_")));
             
             #line default
             #line hidden
             this.Write("  { get; set; }\r\n");
             
-            #line 199 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
+            #line 199 "C:\GIT\ABI2CSharp\Templates\AbiCodeGen.tt"
   }
 
             
@@ -440,7 +440,7 @@ foreach (var field in types[type])
             #line hidden
             this.Write("                }\r\n");
             
-            #line 202 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
+            #line 202 "C:\GIT\ABI2CSharp\Templates\AbiCodeGen.tt"
 } 
             
             #line default
@@ -448,7 +448,7 @@ foreach (var field in types[type])
             this.Write("            }\r\n            public static class Requests\r\n            {\r\n         " +
                     "       const string DefaultPermission = \"active\";\r\n");
             
-            #line 207 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
+            #line 207 "C:\GIT\ABI2CSharp\Templates\AbiCodeGen.tt"
  foreach (var action in actions) { 
     string 
         classNameSafe = getSafeTypeName(action.name, "t_"),
@@ -459,21 +459,21 @@ foreach (var field in types[type])
             #line hidden
             this.Write("                public class ");
             
-            #line 212 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
+            #line 212 "C:\GIT\ABI2CSharp\Templates\AbiCodeGen.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(classNameSafe));
             
             #line default
             #line hidden
             this.Write(" : Types.");
             
-            #line 212 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
+            #line 212 "C:\GIT\ABI2CSharp\Templates\AbiCodeGen.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(underlyingType));
             
             #line default
             #line hidden
             this.Write("\r\n                {                \r\n");
             
-            #line 214 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
+            #line 214 "C:\GIT\ABI2CSharp\Templates\AbiCodeGen.tt"
  if (includeEosSharpTest)
 { 
             
@@ -482,7 +482,7 @@ foreach (var field in types[type])
             this.Write("                    public static EosSharp.Core.Api.v1.Action CreateAction(Model." +
                     "eosio.Name wallet, Types.");
             
-            #line 216 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
+            #line 216 "C:\GIT\ABI2CSharp\Templates\AbiCodeGen.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(underlyingType));
             
             #line default
@@ -491,7 +491,7 @@ foreach (var field in types[type])
                     "lic static EosSharp.Core.Api.v1.Action CreateAction(Model.eosio.Name wallet, Typ" +
                     "es.");
             
-            #line 217 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
+            #line 217 "C:\GIT\ABI2CSharp\Templates\AbiCodeGen.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(underlyingType));
             
             #line default
@@ -501,7 +501,7 @@ foreach (var field in types[type])
                     "                  account = contract,\r\n                            name = Action" +
                     "s.");
             
-            #line 222 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
+            #line 222 "C:\GIT\ABI2CSharp\Templates\AbiCodeGen.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(classNameSafe));
             
             #line default
@@ -510,49 +510,49 @@ foreach (var field in types[type])
                     "PermissionLevel() { actor = wallet, permission = permission } },\r\n              " +
                     "              data = data\r\n                        };\r\n");
             
-            #line 226 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
+            #line 226 "C:\GIT\ABI2CSharp\Templates\AbiCodeGen.tt"
  } 
             
             #line default
             #line hidden
             this.Write("                }\r\n");
             
-            #line 228 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
+            #line 228 "C:\GIT\ABI2CSharp\Templates\AbiCodeGen.tt"
 } 
             
             #line default
             #line hidden
             this.Write("            }\r\n            public static class Responses\r\n            {\r\n");
             
-            #line 232 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
+            #line 232 "C:\GIT\ABI2CSharp\Templates\AbiCodeGen.tt"
  foreach (var table in tables) { 
             
             #line default
             #line hidden
             this.Write("                public class ");
             
-            #line 233 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
+            #line 233 "C:\GIT\ABI2CSharp\Templates\AbiCodeGen.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(getSafeTypeName(table.name, "t_")));
             
             #line default
             #line hidden
             this.Write(" : Types.");
             
-            #line 233 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
+            #line 233 "C:\GIT\ABI2CSharp\Templates\AbiCodeGen.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(getSafeTypeName(table.type, "t_")));
             
             #line default
             #line hidden
             this.Write("\r\n                {\r\n                }\r\n");
             
-            #line 236 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
+            #line 236 "C:\GIT\ABI2CSharp\Templates\AbiCodeGen.tt"
 } 
             
             #line default
             #line hidden
             this.Write("            }\r\n        }\r\n    }\r\n");
             
-            #line 240 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
+            #line 240 "C:\GIT\ABI2CSharp\Templates\AbiCodeGen.tt"
  if (includeExtensions) { 
             
             #line default
@@ -709,13 +709,13 @@ foreach (var field in types[type])
                     "turn t.Deserialize(reader);\r\n            }\r\n            return null;\r\n        }\r" +
                     "\n    }\r\n");
             
-            #line 517 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
+            #line 517 "C:\GIT\ABI2CSharp\Templates\AbiCodeGen.tt"
  }
             
             #line default
             #line hidden
             
-            #line 518 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
+            #line 518 "C:\GIT\ABI2CSharp\Templates\AbiCodeGen.tt"
  if (includeEosioModels) { 
             
             #line default
@@ -723,177 +723,229 @@ foreach (var field in types[type])
             this.Write("\tnamespace Model.eosio\r\n\t{\r\n        public interface ICustomSerialize<T>\r\n       " +
                     " {\r\n            string Serialize();\r\n            T Deserialize(JsonReader reader" +
                     ");\r\n        }\r\n        [JsonConverter(typeof(CustomJsonConverter<Asset>))]\r\n\t   " +
-                    " public class Asset : ICustomSerialize<Asset>\r\n\t    {\r\n\t\t    const string Englis" +
-                    "hCultureName = \"en-GB\";\r\n\t\t    static readonly CultureInfo EnglishCulture = new " +
-                    "CultureInfo(EnglishCultureName);\r\n\t\t    public Symbol Token { get; set; }\r\n\t\t   " +
-                    " public UInt64 Balance { get; set; }\r\n\t\t    [Newtonsoft.Json.JsonIgnore]\r\n\t\t    " +
-                    "public decimal BalanceDecimal { get => Balance / (decimal)Token.Factor; set => B" +
-                    "alance = (ulong)(value * (decimal)Token.Factor); }\r\n\t\t    /// <remarks>\r\n\t\t    /" +
-                    "// We use the F string format so there is only a decimal, no thousand separator." +
-                    "\r\n\t\t    /// </remarks>\r\n\t\t    public override string ToString() => $\"{BalanceDec" +
-                    "imal.ToString($\"F{Token.precision}\", EnglishCulture)} {Token.name}\";\r\n          " +
-                    "  public Asset() { } // Empty constructor for serializing\r\n\t\t    public static i" +
-                    "mplicit operator Asset(string value)\r\n\t\t    {\r\n\t\t\t    Asset result = new Asset()" +
-                    ";\r\n\t\t\t    string[] parts = value.Split(\' \');\r\n\t\t\t    if (parts.Length != 2) thro" +
-                    "w new ArgumentException($\"Cannot parse \'{value}\' as a valid token balance\", name" +
-                    "of(value));\r\n\t\t\t    string[] valueParts = parts[0].Split(\'.\');\r\n\t\t\t    result.To" +
-                    "ken = new Symbol(\r\n\t\t\t\t    name: parts[1], \r\n\t\t\t\t    precision: (byte)(valuePart" +
-                    "s.Length == 2 ? valueParts[1].Length : 0)\r\n\t\t\t    );\r\n\t\t\t    if (decimal.TryPars" +
-                    "e(parts[0], NumberStyles.AllowDecimalPoint, EnglishCulture, out decimal balance)" +
-                    ") result.BalanceDecimal = balance;\r\n\t\t\t    else throw new ArgumentException($\"Un" +
-                    "able to parse \'{parts[0]}\' as a valid decimal\");\r\n\t\t\t    return result;\r\n\t\t    }" +
-                    "\r\n\t\t    public static implicit operator string(Asset value) => value.ToString();" +
-                    "\r\n\t\t    public string Serialize() => ToString();\r\n\t\t    public Asset Deserialize" +
-                    "(JsonReader reader) => (string)reader.Value;\r\n\t\t    public override int GetHashC" +
-                    "ode() => ToString().GetHashCode();\r\n\t\t    public override bool Equals(object obj" +
-                    ") => obj?.GetHashCode().Equals(GetHashCode()) ?? false;\r\n\t    }\r\n        [JsonCo" +
-                    "nverter(typeof(CustomJsonConverter<CheckSum256>))]\r\n        public class CheckSu" +
-                    "m256 : ICustomSerialize<CheckSum256>\r\n        {\r\n            const int BitsPerBy" +
-                    "te = 8;\r\n            const int HexCharsPerByte = 2;\r\n            internal const " +
-                    "int ExpectedLength = (256 / BitsPerByte) * 2;\r\n            byte[] _Raw;\r\n       " +
-                    "     string _AsString;\r\n            public byte[] Raw\r\n            {\r\n          " +
-                    "      get => _Raw;\r\n                set\r\n                {\r\n                    " +
-                    "_Raw = value;\r\n                    _AsString = value.ToHexLower();\r\n            " +
-                    "    }\r\n            }\r\n            public string AsString\r\n            {\r\n       " +
-                    "         get => _AsString;\r\n                set\r\n                {\r\n            " +
-                    "        _AsString = value;\r\n                    _Raw = value.ToByteArrayFastest(" +
-                    ");\r\n                }\r\n            }\r\n            public CheckSum256() { } // Em" +
-                    "pty constructor for serializing\r\n            public CheckSum256(string value)\r\n " +
-                    "           {\r\n                AsString = value;\r\n            }\r\n            publ" +
-                    "ic static implicit operator CheckSum256(string value)\r\n            {\r\n          " +
-                    "      int valueLength = value?.Length ?? 0;\r\n                if (valueLength != " +
-                    "ExpectedLength) throw new System.ArgumentException($\"A {nameof(CheckSum256)} sho" +
-                    "uld be {ExpectedLength} bytes in length. Supplied value byte length: {valueLengt" +
-                    "h}\", nameof(value));\r\n                else return new CheckSum256(value);\r\n     " +
-                    "       }\r\n            public static implicit operator string(CheckSum256 value) " +
-                    "=> value.AsString;\r\n            public override string ToString() => AsString;\r\n" +
-                    "            public string Serialize() => AsString;\r\n            public CheckSum2" +
-                    "56 Deserialize(JsonReader reader) => (string)reader.Value;\r\n            public o" +
-                    "verride int GetHashCode() => AsString.GetHashCode();\r\n            public overrid" +
-                    "e bool Equals(object obj) => obj?.GetHashCode().Equals(GetHashCode()) ?? false;\r" +
-                    "\n        }\r\n        [JsonConverter(typeof(CustomJsonConverter<Name>))]\r\n        " +
-                    "public class Name : ICustomSerialize<Name>\r\n        {\r\n            ulong _Value;" +
-                    "\r\n            string _Name;\r\n            public ulong Value \r\n            { \r\n  " +
-                    "              get => _Value; \r\n                set \r\n                {\r\n        " +
-                    "            if(value != _Value)\r\n                    {\r\n                        " +
-                    "_Value = value;\r\n                        _Name = value.ToName();\r\n              " +
-                    "      }\r\n                } \r\n            }\r\n            public string AsString {" +
-                    " \r\n                get => _Name;\r\n                set\r\n                {\r\n      " +
-                    "              if(value != _Name)\r\n                    {\r\n                       " +
-                    " _Name = value;\r\n                        _Value = AsString.NameToLong();\r\n      " +
-                    "              }\r\n                }\r\n            }\r\n            public Name() { }" +
-                    " // Empty constructor for serializing\r\n            public Name(string value)\r\n  " +
-                    "          {\r\n                AsString = value;\r\n            }\r\n            publi" +
-                    "c Name(ulong value)\r\n            {\r\n                Value = value;\r\n            " +
-                    "}\r\n            public static implicit operator ulong(Name value) => value.Value;" +
-                    "\r\n            public static implicit operator string (Name value) => value.AsStr" +
-                    "ing;\r\n            public static implicit operator Name(ulong value) => new Name(" +
-                    "value);\r\n            public static implicit operator Name(string value) => new N" +
-                    "ame(value);\r\n            public override string ToString() => AsString;\r\n       " +
-                    "     public string Serialize() => AsString;\r\n            public Name Deserialize" +
-                    "(JsonReader reader) => (string)reader.Value;\r\n            public override int Ge" +
-                    "tHashCode() => AsString.GetHashCode();\r\n            public override bool Equals(" +
-                    "object obj) => obj?.GetHashCode().Equals(GetHashCode()) ?? false;\r\n        }    " +
-                    "    \r\n\t    [JsonConverter(typeof(CustomJsonConverter<Symbol>))]\r\n\t    public cla" +
-                    "ss Symbol : ICustomSerialize<Symbol>\r\n\t    {\r\n\t\t    const char Separator = \',\';\r" +
-                    "\n            public byte precision { get; set; }\r\n            public string name" +
-                    " { get; set; }\r\n\t\t    /// <remarks>\r\n\t\t    /// <see cref=\"System.Math.Pow\">Syste" +
-                    "m.Math.Pow(10, 0)</see> returns 1, \r\n\t\t    /// otherwise, this should have been " +
-                    "written with a <see cref=\"System.Math.Max\"/>\r\n\t\t    /// </remarks>\r\n\t\t    [Newto" +
-                    "nsoft.Json.JsonIgnore]\r\n\t\t    public double Factor { get => System.Math.Pow(10, " +
-                    "precision); }\r\n\t\t    public Symbol() { } // Empty constructor for serializing\r\n\t" +
-                    "\t    public Symbol(string name, byte precision) {\r\n\t\t\t    this.name = name;\r\n\t\t\t" +
-                    "    this.precision = precision;\r\n\t\t    }\r\n\t\t    public static implicit operator " +
-                    "Symbol(string value)\r\n            {\r\n\t\t\t    string[] parts = value.Split(Separat" +
-                    "or);\r\n\t\t\t    if (parts.Length != 2) throw new System.ArgumentException($\"Symbol " +
-                    "should be precision, followed by name, separated by \'{Separator}\'\", nameof(value" +
-                    "));\r\n\t\t\t    else if (!byte.TryParse(parts[0], out byte precision)) throw new Sys" +
-                    "tem.ArgumentException($\"Can\'t parse \'{parts[0]}\' as precision\", nameof(value));\r" +
-                    "\n\t\t\t    else return new Symbol(parts[1], precision);\r\n\t\t    }\r\n\t\t    public stat" +
-                    "ic implicit operator string(Symbol value) => value.ToString();\r\n\t\t    public ove" +
-                    "rride string ToString() => $\"{precision}{Separator}{name}\";\r\n\t\t    public string" +
-                    " Serialize() => ToString();\r\n\t\t    public Symbol Deserialize(JsonReader reader) " +
-                    "=> (string)reader.Value;\r\n\t\t    public override int GetHashCode() => ToString()." +
-                    "GetHashCode();\r\n\t\t    public override bool Equals(object obj) => obj?.GetHashCod" +
-                    "e().Equals(GetHashCode()) ?? false;\r\n\t    }\r\n        [JsonConverter(typeof(Custo" +
-                    "mJsonConverter<TimePoint>))]\r\n        public class TimePoint : ICustomSerialize<" +
-                    "TimePoint>\r\n        {\r\n            ulong _Value;\r\n            DateTime _Moment;\r" +
-                    "\n            public ulong Value \r\n            { \r\n                get => _Value;" +
-                    " \r\n                set \r\n                {\r\n                    if(value != _Val" +
-                    "ue)\r\n                    {\r\n                        _Value = value;\r\n           " +
-                    "             _Moment = DateTime.UnixEpoch.AddMilliseconds(value);\r\n             " +
-                    "       }\r\n                } \r\n            }\r\n            public DateTime Moment\r" +
-                    "\n            { \r\n                get => _Moment;\r\n                set\r\n         " +
-                    "       {\r\n                    if(value != _Moment)\r\n                    {\r\n     " +
-                    "                   _Moment = value;\r\n                        _Value = (ulong)val" +
-                    "ue.Subtract(DateTime.UnixEpoch).TotalMilliseconds;\r\n                    }\r\n     " +
-                    "           }\r\n            }\r\n            public TimePoint() { } // Empty constru" +
-                    "ctor for serializing\r\n            public TimePoint(ulong value)\r\n            {\r\n" +
-                    "                Value = value;\r\n            }\r\n            public TimePoint(stri" +
-                    "ng value)\r\n            {\r\n                Moment = DateTime.SpecifyKind(DateTime" +
-                    ".ParseExact(value, \"yyyy-MM-dd\'T\'HH:mm:ss.fff\", System.Globalization.CultureInfo" +
-                    ".InvariantCulture), DateTimeKind.Utc);\r\n            }\r\n            public TimePo" +
-                    "int(DateTime value)\r\n            {\r\n                Moment = value;\r\n           " +
-                    " }\r\n            public static implicit operator ulong(TimePoint value) => value." +
-                    "Value;\r\n            public static implicit operator DateTime(TimePoint value) =>" +
-                    " value.Moment;\r\n            public static implicit operator TimePoint(ulong valu" +
-                    "e) => new TimePoint(value);\r\n            public static implicit operator TimePoi" +
-                    "nt(DateTime value) => new TimePoint(value);\r\n            public static implicit " +
-                    "operator TimePoint(string value) => new TimePoint(value);\r\n            public ov" +
-                    "erride string ToString() => Moment.ToString(\"yyyy-MM-dd HH:mm:ss.fff\");\r\n       " +
-                    "     public string Serialize() => Value.ToString();\r\n            /// <summary>\r\n" +
-                    "            /// NewtonSoft already deserializes the DateTime string properly, so" +
-                    " we just need to ensure we specify it\'s in UTC, but we also support ulong and ra" +
-                    "w string.\r\n            /// </summary>\r\n            /// <param name=\"reader\"></pa" +
-                    "ram>\r\n            /// <returns></returns>\r\n            public TimePoint Deserial" +
-                    "ize(JsonReader reader)\r\n            {\r\n                if (reader.Value is DateT" +
-                    "ime t) return DateTime.SpecifyKind(t, DateTimeKind.Utc);\r\n                else i" +
-                    "f (reader.Value is string s) return ulong.TryParse(s, out ulong v) ? new TimePoi" +
-                    "nt(v) : new TimePoint(s);\r\n                else throw new ArgumentException($\"Ca" +
-                    "nnot deserialize \'{reader.Value}\' as a {nameof(TimePoint)}\");\r\n            }\r\n  " +
-                    "          public override int GetHashCode() => Moment.GetHashCode();\r\n          " +
-                    "  public override bool Equals(object obj) => obj?.GetHashCode().Equals(GetHashCo" +
-                    "de()) ?? false;\r\n        }\r\n        [JsonConverter(typeof(CustomJsonConverter<Ti" +
-                    "mePointSec>))]\r\n        public class TimePointSec : ICustomSerialize<TimePointSe" +
-                    "c>\r\n        {\r\n            uint _Value;\r\n            DateTime _Moment;\r\n        " +
-                    "    public uint Value \r\n            { \r\n                get => _Value; \r\n       " +
-                    "         set \r\n                {\r\n                    if(value != _Value)\r\n     " +
-                    "               {\r\n                        _Value = value;\r\n                     " +
-                    "   _Moment = DateTime.UnixEpoch.AddSeconds(value);\r\n                    }\r\n     " +
-                    "           } \r\n            }\r\n            public DateTime Moment\r\n            { " +
-                    "\r\n                get => _Moment;\r\n                set\r\n                {\r\n     " +
-                    "               if(value != _Moment)\r\n                    {\r\n                    " +
-                    "    _Moment = value;\r\n                        _Value = (uint)value.Subtract(Date" +
-                    "Time.UnixEpoch).TotalSeconds;\r\n                    }\r\n                }\r\n       " +
-                    "     }\r\n            public TimePointSec() { } // Empty constructor for serializi" +
-                    "ng\r\n            public TimePointSec(uint value)\r\n            {\r\n                " +
-                    "Value = value;\r\n            }\r\n            public TimePointSec(string value)\r\n  " +
-                    "          {\r\n                Moment = DateTime.SpecifyKind(DateTime.ParseExact(v" +
-                    "alue, \"yyyy-MM-dd\'T\'HH:mm:ss.fff\", System.Globalization.CultureInfo.InvariantCul" +
-                    "ture), DateTimeKind.Utc);\r\n            }\r\n            public TimePointSec(DateTi" +
-                    "me value)\r\n            {\r\n                Moment = value;\r\n            }\r\n      " +
-                    "      public static implicit operator uint(TimePointSec value) => value.Value;\r\n" +
-                    "            public static implicit operator DateTime(TimePointSec value) => valu" +
-                    "e.Moment;\r\n            public static implicit operator TimePointSec(uint value) " +
-                    "=> new TimePointSec(value);\r\n            public static implicit operator TimePoi" +
-                    "ntSec(DateTime value) => new TimePointSec(value);\r\n            public static imp" +
-                    "licit operator TimePointSec(string value) => new TimePointSec(value);\r\n         " +
-                    "   public override string ToString() => Moment.ToString(\"yyyy-MM-dd HH:mm:ss.fff" +
-                    "\");\r\n\r\n            public string Serialize() => Value.ToString();\r\n            /" +
-                    "// <summary>\r\n            /// NewtonSoft already deserializes the DateTime strin" +
-                    "g properly, so we just need to ensure we specify it\'s in UTC, but we also suppor" +
-                    "t ulong and raw string.\r\n            /// </summary>\r\n            /// <param name" +
-                    "=\"reader\"></param>\r\n            /// <returns></returns>\r\n            public Time" +
-                    "PointSec Deserialize(JsonReader reader)\r\n            {\r\n                if (read" +
-                    "er.Value is DateTime t) return DateTime.SpecifyKind(t, DateTimeKind.Utc);\r\n     " +
-                    "           else if (reader.Value is string s) return uint.TryParse(s, out uint v" +
-                    ") ? new TimePointSec(v) : new TimePointSec(s);\r\n                else throw new A" +
-                    "rgumentException($\"Cannot deserialize \'{reader.Value}\' as a {nameof(TimePointSec" +
-                    ")}\");\r\n            }\r\n            public override int GetHashCode() => Moment.Ge" +
-                    "tHashCode();\r\n            public override bool Equals(object obj) => obj?.GetHas" +
-                    "hCode().Equals(GetHashCode()) ?? false;\r\n        }\r\n\t} \r\n");
+                    " public class Asset : ICustomSerialize<Asset>\r\n\t    {        \r\n\t\t    const strin" +
+                    "g EnglishCultureName = \"en-GB\";\r\n\t\t    static readonly CultureInfo EnglishCultur" +
+                    "e = new CultureInfo(EnglishCultureName);\r\n\t\t    public Symbol Token { get; set; " +
+                    "}\r\n\t\t    public UInt64 Balance { get; set; }\r\n\t\t    [Newtonsoft.Json.JsonIgnore]" +
+                    "\r\n\t\t    public decimal BalanceDecimal { get => Balance / (decimal)Token.Factor; " +
+                    "set => Balance = (ulong)(value * (decimal)Token.Factor); }\r\n\t\t    /// <remarks>\r" +
+                    "\n\t\t    /// We use the F string format so there is only a decimal, no thousand se" +
+                    "parator.\r\n\t\t    /// </remarks>\r\n\t\t    public override string ToString() => $\"{Ba" +
+                    "lanceDecimal.ToString($\"F{Token.precision}\", EnglishCulture)} {Token.name}\";\r\n  " +
+                    "          public Asset() { } // Empty constructor for serializing\r\n\t\t    public " +
+                    "Asset(Symbol token, UInt64 balance)\r\n            {\r\n\t\t\t    Token = token;\r\n\t\t\t  " +
+                    "  Balance = balance;\r\n            }\r\n\t\t    public static implicit operator Asset" +
+                    "(string value)\r\n\t\t    {\r\n\t\t\t    Asset result = new Asset();\r\n\t\t\t    string[] par" +
+                    "ts = value.Split(\' \');\r\n\t\t\t    if (parts.Length != 2) throw new ArgumentExceptio" +
+                    "n($\"Cannot parse \'{value}\' as a valid token balance\", nameof(value));\r\n\t\t\t    st" +
+                    "ring[] valueParts = parts[0].Split(\'.\');\r\n\t\t\t    result.Token = new Symbol(\r\n\t\t\t" +
+                    "\t    name: parts[1], \r\n\t\t\t\t    precision: (byte)(valueParts.Length == 2 ? valueP" +
+                    "arts[1].Length : 0)\r\n\t\t\t    );\r\n\t\t\t    if (decimal.TryParse(parts[0], NumberStyl" +
+                    "es.AllowDecimalPoint, EnglishCulture, out decimal balance)) result.BalanceDecima" +
+                    "l = balance;\r\n\t\t\t    else throw new ArgumentException($\"Unable to parse \'{parts[" +
+                    "0]}\' as a valid decimal\");\r\n\t\t\t    return result;\r\n\t\t    }\r\n\t\t    public static " +
+                    "implicit operator string(Asset value) => value.ToString();\r\n\t\t    public string " +
+                    "Serialize() => ToString();\r\n\t\t    public Asset Deserialize(JsonReader reader) =>" +
+                    " (string)reader.Value;\r\n\t\t    public override int GetHashCode() => ToString().Ge" +
+                    "tHashCode();\r\n\t\t    public override bool Equals(object obj) => obj?.GetHashCode(" +
+                    ").Equals(GetHashCode()) ?? false;\r\n\t\t    public static Asset operator +(Asset a," +
+                    " Asset b)\r\n            {\r\n\t\t\t    System.Diagnostics.Contracts.Contract.Requires<" +
+                    "ArgumentException>(a.Token == b.Token, \"Both assets need to be the same token!\")" +
+                    ";\r\n\t\t\t    return new Asset(a.Token, a.Balance + b.Balance);\r\n\t\t    }\r\n\t\t    publ" +
+                    "ic static Asset operator -(Asset a, Asset b)\r\n\t\t    {\r\n\t\t\t    System.Diagnostics" +
+                    ".Contracts.Contract.Requires<ArgumentException>(a.Token == b.Token, \"Both assets" +
+                    " need to be the same token!\");\r\n\t\t\t    return new Asset(a.Token, a.Balance - b.B" +
+                    "alance);\r\n\t\t    }\r\n\t\t    public static Asset operator *(Asset x, ulong multi)\r\n\t" +
+                    "\t\t    => new Asset(x.Token, x.Balance * multi);\r\n\t\t    public static Asset opera" +
+                    "tor /(Asset x, ulong multi)\r\n\t\t    {\r\n\t\t\t    System.Diagnostics.Contracts.Contra" +
+                    "ct.Requires<DivideByZeroException>(multi > 0, \"Cannot divide by zero\");\r\n\t\t\t    " +
+                    "return new Asset(x.Token, x.Balance / multi);\r\n\t\t    }\r\n\t    }        \r\n        " +
+                    "[JsonConverter(typeof(CustomJsonConverter<ExtendedAsset>))]\r\n\t    public class E" +
+                    "xtendedAsset : ICustomSerialize<ExtendedAsset>\r\n\t    {\t\r\n\t\t    public Asset Quan" +
+                    "tity { get; set; }\r\n\t\t    public Name Contract { get; set; }\r\n\t\t    public overr" +
+                    "ide string ToString() => $\"{Quantity.ToString()}@{Contract}\";\r\n            publi" +
+                    "c ExtendedAsset() { } // Empty constructor for serializing\r\n\t\t    public Extende" +
+                    "dAsset(Asset quantity, Name contract)\r\n            {\r\n\t\t\t    Quantity = quantity" +
+                    ";\r\n\t\t\t    Contract = contract;\r\n            }\r\n\t\t    public static implicit oper" +
+                    "ator ExtendedAsset(string value)\r\n\t\t    {\r\n\t\t\t    Asset result = new Asset();\r\n\t" +
+                    "\t\t    string[] parts = value.Split(\'@\');\r\n\t\t\t    if (parts.Length != 2) throw ne" +
+                    "w ArgumentException($\"Cannot parse \'{value}\' as a valid token balance\", nameof(v" +
+                    "alue));\r\n\t\t\t    return new ExtendedAsset(parts[0], parts[1]);\r\n\t\t    }\r\n\t\t    pu" +
+                    "blic static implicit operator string(ExtendedAsset value) => value.ToString();\r\n" +
+                    "\t\t    public string Serialize() => ToString();\r\n\t\t    public ExtendedAsset Deser" +
+                    "ialize(JsonReader reader)\r\n            {\r\n                // Read Start object T" +
+                    "oken.\r\n                reader.Read();\r\n                reader.Read();\r\n         " +
+                    "       Asset quantity = (string)reader.Value;\r\n                reader.Read();\r\n " +
+                    "               reader.Read();\r\n                Name contract = (string)reader.Va" +
+                    "lue;\r\n                reader.Read();\r\n                return new ExtendedAsset(q" +
+                    "uantity, contract);\r\n            }\r\n\t\t    public override int GetHashCode() => T" +
+                    "oString().GetHashCode();\r\n\t\t    public override bool Equals(object obj) => obj?." +
+                    "GetHashCode().Equals(GetHashCode()) ?? false;\r\n\t\t    public static ExtendedAsset" +
+                    " operator +(ExtendedAsset a, ExtendedAsset b)\r\n            {\r\n\t\t\t    System.Diag" +
+                    "nostics.Contracts.Contract.Requires<ArgumentException>(a.Contract == b.Contract," +
+                    " \"Both assets need to be the same contract!\");\r\n                System.Diagnosti" +
+                    "cs.Contracts.Contract.Requires<ArgumentException>(a.Quantity.Token == b.Quantity" +
+                    ".Token, \"Both assets need to be the same token!\");\r\n                return new E" +
+                    "xtendedAsset(a.Quantity + b.Quantity, a.Contract);\r\n\t\t    }\r\n\t\t    public static" +
+                    " ExtendedAsset operator -(ExtendedAsset a, ExtendedAsset b)\r\n            {\r\n    " +
+                    "            System.Diagnostics.Contracts.Contract.Requires<ArgumentException>(a." +
+                    "Contract == b.Contract, \"Both assets need to be the same contract!\");\r\n         " +
+                    "       System.Diagnostics.Contracts.Contract.Requires<ArgumentException>(a.Quant" +
+                    "ity.Token == b.Quantity.Token, \"Both assets need to be the same token!\");\r\n     " +
+                    "           return new ExtendedAsset(a.Quantity - b.Quantity, a.Contract);\r\n     " +
+                    "       }\r\n\t\t    public static ExtendedAsset operator *(ExtendedAsset x, ulong mu" +
+                    "lti)\r\n\t\t\t    => new ExtendedAsset(x.Quantity * multi, x.Contract);\r\n\t\t    public" +
+                    " static ExtendedAsset operator /(ExtendedAsset x, ulong multi)\r\n\t\t    {\r\n\t\t\t    " +
+                    "System.Diagnostics.Contracts.Contract.Requires<DivideByZeroException>(multi > 0," +
+                    " \"Cannot divide by zero\");\r\n\t\t\t    return new ExtendedAsset(x.Quantity / multi, " +
+                    "x.Contract);\r\n\t\t    }\r\n\t    }\r\n        [JsonConverter(typeof(CustomJsonConverter" +
+                    "<CheckSum256>))]\r\n        public class CheckSum256 : ICustomSerialize<CheckSum25" +
+                    "6>\r\n        {\r\n            const int BitsPerByte = 8;\r\n            const int Hex" +
+                    "CharsPerByte = 2;\r\n            internal const int ExpectedLength = (256 / BitsPe" +
+                    "rByte) * 2;\r\n            byte[] _Raw;\r\n            string _AsString;\r\n          " +
+                    "  public byte[] Raw\r\n            {\r\n                get => _Raw;\r\n              " +
+                    "  set\r\n                {\r\n                    _Raw = value;\r\n                   " +
+                    " _AsString = value.ToHexLower();\r\n                }\r\n            }\r\n            " +
+                    "public string AsString\r\n            {\r\n                get => _AsString;\r\n      " +
+                    "          set\r\n                {\r\n                    _AsString = value;\r\n      " +
+                    "              _Raw = value.ToByteArrayFastest();\r\n                }\r\n           " +
+                    " }\r\n            public CheckSum256() { } // Empty constructor for serializing\r\n " +
+                    "           public CheckSum256(string value)\r\n            {\r\n                AsSt" +
+                    "ring = value;\r\n            }\r\n            public static implicit operator CheckS" +
+                    "um256(string value)\r\n            {\r\n                int valueLength = value?.Len" +
+                    "gth ?? 0;\r\n                if (valueLength != ExpectedLength) throw new System.A" +
+                    "rgumentException($\"A {nameof(CheckSum256)} should be {ExpectedLength} bytes in l" +
+                    "ength. Supplied value byte length: {valueLength}\", nameof(value));\r\n            " +
+                    "    else return new CheckSum256(value);\r\n            }\r\n            public stati" +
+                    "c implicit operator string(CheckSum256 value) => value.AsString;\r\n            pu" +
+                    "blic override string ToString() => AsString;\r\n            public string Serializ" +
+                    "e() => AsString;\r\n            public CheckSum256 Deserialize(JsonReader reader) " +
+                    "=> (string)reader.Value;\r\n            public override int GetHashCode() => AsStr" +
+                    "ing.GetHashCode();\r\n            public override bool Equals(object obj) => obj?." +
+                    "GetHashCode().Equals(GetHashCode()) ?? false;\r\n        }\r\n        [JsonConverter" +
+                    "(typeof(CustomJsonConverter<Name>))]\r\n        public class Name : ICustomSeriali" +
+                    "ze<Name>\r\n        {\r\n            ulong _Value;\r\n            string _Name;\r\n     " +
+                    "       public ulong Value \r\n            { \r\n                get => _Value; \r\n   " +
+                    "             set \r\n                {\r\n                    if(value != _Value)\r\n " +
+                    "                   {\r\n                        _Value = value;\r\n                 " +
+                    "       _Name = value.ToName();\r\n                    }\r\n                } \r\n     " +
+                    "       }\r\n            public string AsString { \r\n                get => _Name;\r\n" +
+                    "                set\r\n                {\r\n                    if(value != _Name)\r\n" +
+                    "                    {\r\n                        _Name = value;\r\n                 " +
+                    "       _Value = AsString.NameToLong();\r\n                    }\r\n                }" +
+                    "\r\n            }\r\n            public Name() { } // Empty constructor for serializ" +
+                    "ing\r\n            public Name(string value)\r\n            {\r\n                AsStr" +
+                    "ing = value;\r\n            }\r\n            public Name(ulong value)\r\n            {" +
+                    "\r\n                Value = value;\r\n            }\r\n            public static impli" +
+                    "cit operator ulong(Name value) => value.Value;\r\n            public static implic" +
+                    "it operator string (Name value) => value.AsString;\r\n            public static im" +
+                    "plicit operator Name(ulong value) => new Name(value);\r\n            public static" +
+                    " implicit operator Name(string value) => new Name(value);\r\n            public ov" +
+                    "erride string ToString() => AsString;\r\n            public string Serialize() => " +
+                    "AsString;\r\n            public Name Deserialize(JsonReader reader) => (string)rea" +
+                    "der.Value;\r\n            public override int GetHashCode() => AsString.GetHashCod" +
+                    "e();\r\n            public override bool Equals(object obj) => obj?.GetHashCode()." +
+                    "Equals(GetHashCode()) ?? false;\r\n        }        \r\n\t    [JsonConverter(typeof(C" +
+                    "ustomJsonConverter<Symbol>))]\r\n\t    public class Symbol : ICustomSerialize<Symbo" +
+                    "l>\r\n\t    {\r\n\t\t    const char Separator = \',\';\r\n            public byte precision" +
+                    " { get; set; }\r\n            public string name { get; set; }\r\n\t\t    /// <remarks" +
+                    ">\r\n\t\t    /// <see cref=\"System.Math.Pow\">System.Math.Pow(10, 0)</see> returns 1," +
+                    " \r\n\t\t    /// otherwise, this should have been written with a <see cref=\"System.M" +
+                    "ath.Max\"/>\r\n\t\t    /// </remarks>\r\n\t\t    [Newtonsoft.Json.JsonIgnore]\r\n\t\t    publ" +
+                    "ic double Factor { get => System.Math.Pow(10, precision); }\r\n\t\t    public Symbol" +
+                    "() { } // Empty constructor for serializing\r\n\t\t    public Symbol(string name, by" +
+                    "te precision) {\r\n\t\t\t    this.name = name;\r\n\t\t\t    this.precision = precision;\r\n\t" +
+                    "\t    }\r\n\t\t    public static implicit operator Symbol(string value)\r\n            " +
+                    "{\r\n\t\t\t    string[] parts = value.Split(Separator);\r\n\t\t\t    if (parts.Length != 2" +
+                    ") throw new System.ArgumentException($\"Symbol should be precision, followed by n" +
+                    "ame, separated by \'{Separator}\'\", nameof(value));\r\n\t\t\t    else if (!byte.TryPars" +
+                    "e(parts[0], out byte precision)) throw new System.ArgumentException($\"Can\'t pars" +
+                    "e \'{parts[0]}\' as precision\", nameof(value));\r\n\t\t\t    else return new Symbol(par" +
+                    "ts[1], precision);\r\n\t\t    }\r\n\t\t    public static implicit operator string(Symbol" +
+                    " value) => value.ToString();\r\n\t\t    public override string ToString() => $\"{prec" +
+                    "ision}{Separator}{name}\";\r\n\t\t    public string Serialize() => ToString();\r\n\t\t   " +
+                    " public Symbol Deserialize(JsonReader reader) => (string)reader.Value;\r\n\t\t    pu" +
+                    "blic override int GetHashCode() => ToString().GetHashCode();\r\n\t\t    public overr" +
+                    "ide bool Equals(object obj) => obj?.GetHashCode().Equals(GetHashCode()) ?? false" +
+                    ";\r\n\t    }\r\n        [JsonConverter(typeof(CustomJsonConverter<TimePoint>))]\r\n    " +
+                    "    public class TimePoint : ICustomSerialize<TimePoint>\r\n        {\r\n           " +
+                    " ulong _Value;\r\n            DateTime _Moment;\r\n            public ulong Value \r\n" +
+                    "            { \r\n                get => _Value; \r\n                set \r\n         " +
+                    "       {\r\n                    if(value != _Value)\r\n                    {\r\n      " +
+                    "                  _Value = value;\r\n                        _Moment = DateTime.Un" +
+                    "ixEpoch.AddMilliseconds(value);\r\n                    }\r\n                } \r\n    " +
+                    "        }\r\n            public DateTime Moment\r\n            { \r\n                g" +
+                    "et => _Moment;\r\n                set\r\n                {\r\n                    if(v" +
+                    "alue != _Moment)\r\n                    {\r\n                        _Moment = value" +
+                    ";\r\n                        _Value = (ulong)value.Subtract(DateTime.UnixEpoch).To" +
+                    "talMilliseconds;\r\n                    }\r\n                }\r\n            }\r\n     " +
+                    "       public TimePoint() { } // Empty constructor for serializing\r\n            " +
+                    "public TimePoint(ulong value)\r\n            {\r\n                Value = value;\r\n  " +
+                    "          }\r\n            public TimePoint(string value)\r\n            {\r\n        " +
+                    "        Moment = DateTime.SpecifyKind(DateTime.ParseExact(value, \"yyyy-MM-dd\'T\'H" +
+                    "H:mm:ss.fff\", System.Globalization.CultureInfo.InvariantCulture), DateTimeKind.U" +
+                    "tc);\r\n            }\r\n            public TimePoint(DateTime value)\r\n            {" +
+                    "\r\n                Moment = value;\r\n            }\r\n            public static impl" +
+                    "icit operator ulong(TimePoint value) => value.Value;\r\n            public static " +
+                    "implicit operator DateTime(TimePoint value) => value.Moment;\r\n            public" +
+                    " static implicit operator TimePoint(ulong value) => new TimePoint(value);\r\n     " +
+                    "       public static implicit operator TimePoint(DateTime value) => new TimePoin" +
+                    "t(value);\r\n            public static implicit operator TimePoint(string value) =" +
+                    "> new TimePoint(value);\r\n            public override string ToString() => Moment" +
+                    ".ToString(\"yyyy-MM-dd HH:mm:ss.fff\");\r\n            public string Serialize() => " +
+                    "Value.ToString();\r\n            /// <summary>\r\n            /// NewtonSoft already" +
+                    " deserializes the DateTime string properly, so we just need to ensure we specify" +
+                    " it\'s in UTC, but we also support ulong and raw string.\r\n            /// </summa" +
+                    "ry>\r\n            /// <param name=\"reader\"></param>\r\n            /// <returns></r" +
+                    "eturns>\r\n            public TimePoint Deserialize(JsonReader reader)\r\n          " +
+                    "  {\r\n                if (reader.Value is DateTime t) return DateTime.SpecifyKind" +
+                    "(t, DateTimeKind.Utc);\r\n                else if (reader.Value is string s) retur" +
+                    "n ulong.TryParse(s, out ulong v) ? new TimePoint(v) : new TimePoint(s);\r\n       " +
+                    "         else throw new ArgumentException($\"Cannot deserialize \'{reader.Value}\' " +
+                    "as a {nameof(TimePoint)}\");\r\n            }\r\n            public override int GetH" +
+                    "ashCode() => Moment.GetHashCode();\r\n            public override bool Equals(obje" +
+                    "ct obj) => obj?.GetHashCode().Equals(GetHashCode()) ?? false;\r\n        }\r\n      " +
+                    "  [JsonConverter(typeof(CustomJsonConverter<TimePointSec>))]\r\n        public cla" +
+                    "ss TimePointSec : ICustomSerialize<TimePointSec>\r\n        {\r\n            uint _V" +
+                    "alue;\r\n            DateTime _Moment;\r\n            public uint Value \r\n          " +
+                    "  { \r\n                get => _Value; \r\n                set \r\n                {\r\n" +
+                    "                    if(value != _Value)\r\n                    {\r\n                " +
+                    "        _Value = value;\r\n                        _Moment = DateTime.UnixEpoch.Ad" +
+                    "dSeconds(value);\r\n                    }\r\n                } \r\n            }\r\n    " +
+                    "        public DateTime Moment\r\n            { \r\n                get => _Moment;\r" +
+                    "\n                set\r\n                {\r\n                    if(value != _Moment" +
+                    ")\r\n                    {\r\n                        _Moment = value;\r\n            " +
+                    "            _Value = (uint)value.Subtract(DateTime.UnixEpoch).TotalSeconds;\r\n   " +
+                    "                 }\r\n                }\r\n            }\r\n            public TimePoi" +
+                    "ntSec() { } // Empty constructor for serializing\r\n            public TimePointSe" +
+                    "c(uint value)\r\n            {\r\n                Value = value;\r\n            }\r\n   " +
+                    "         public TimePointSec(string value)\r\n            {\r\n                Momen" +
+                    "t = DateTime.SpecifyKind(DateTime.ParseExact(value, \"yyyy-MM-dd\'T\'HH:mm:ss.fff\"," +
+                    " System.Globalization.CultureInfo.InvariantCulture), DateTimeKind.Utc);\r\n       " +
+                    "     }\r\n            public TimePointSec(DateTime value)\r\n            {\r\n        " +
+                    "        Moment = value;\r\n            }\r\n            public static implicit opera" +
+                    "tor uint(TimePointSec value) => value.Value;\r\n            public static implicit" +
+                    " operator DateTime(TimePointSec value) => value.Moment;\r\n            public stat" +
+                    "ic implicit operator TimePointSec(uint value) => new TimePointSec(value);\r\n     " +
+                    "       public static implicit operator TimePointSec(DateTime value) => new TimeP" +
+                    "ointSec(value);\r\n            public static implicit operator TimePointSec(string" +
+                    " value) => new TimePointSec(value);\r\n            public override string ToString" +
+                    "() => Moment.ToString(\"yyyy-MM-dd HH:mm:ss.fff\");\r\n\r\n            public string S" +
+                    "erialize() => Value.ToString();\r\n            /// <summary>\r\n            /// Newt" +
+                    "onSoft already deserializes the DateTime string properly, so we just need to ens" +
+                    "ure we specify it\'s in UTC, but we also support ulong and raw string.\r\n         " +
+                    "   /// </summary>\r\n            /// <param name=\"reader\"></param>\r\n            //" +
+                    "/ <returns></returns>\r\n            public TimePointSec Deserialize(JsonReader re" +
+                    "ader)\r\n            {\r\n                if (reader.Value is DateTime t) return Dat" +
+                    "eTime.SpecifyKind(t, DateTimeKind.Utc);\r\n                else if (reader.Value i" +
+                    "s string s) return uint.TryParse(s, out uint v) ? new TimePointSec(v) : new Time" +
+                    "PointSec(s);\r\n                else throw new ArgumentException($\"Cannot deserial" +
+                    "ize \'{reader.Value}\' as a {nameof(TimePointSec)}\");\r\n            }\r\n            " +
+                    "public override int GetHashCode() => Moment.GetHashCode();\r\n            public o" +
+                    "verride bool Equals(object obj) => obj?.GetHashCode().Equals(GetHashCode()) ?? f" +
+                    "alse;\r\n        }\r\n\t} \r\n");
             
-            #line 810 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
+            #line 887 "C:\GIT\ABI2CSharp\Templates\AbiCodeGen.tt"
  }
 if (includeEosSharpTest)
 { 
@@ -906,42 +958,42 @@ if (includeEosSharpTest)
                     "    {\r\n            var api = new EosApi(new EosConfigurator()\r\n            {\r\n  " +
                     "              SignProvider = null,\r\n                HttpEndpoint = \"");
             
-            #line 822 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
+            #line 899 "C:\GIT\ABI2CSharp\Templates\AbiCodeGen.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(api));
             
             #line default
             #line hidden
             this.Write("\",\r\n                ChainId = \"");
             
-            #line 823 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
+            #line 900 "C:\GIT\ABI2CSharp\Templates\AbiCodeGen.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(chainId));
             
             #line default
             #line hidden
             this.Write("\"\r\n            }, new HttpHandler());\r\n            var result = await Contracts.");
             
-            #line 825 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
+            #line 902 "C:\GIT\ABI2CSharp\Templates\AbiCodeGen.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(safeExportName));
             
             #line default
             #line hidden
             this.Write(".Tables.");
             
-            #line 825 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
+            #line 902 "C:\GIT\ABI2CSharp\Templates\AbiCodeGen.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(getSafeTypeName(tables[0].name, "c_")));
             
             #line default
             #line hidden
             this.Write(".Query(api);\r\n            Console.WriteLine($\"First row from {Contracts.");
             
-            #line 826 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
+            #line 903 "C:\GIT\ABI2CSharp\Templates\AbiCodeGen.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(safeExportName));
             
             #line default
             #line hidden
             this.Write(".Tables.");
             
-            #line 826 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
+            #line 903 "C:\GIT\ABI2CSharp\Templates\AbiCodeGen.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(getSafeTypeName(tables[0].name, "c_")));
             
             #line default
@@ -976,7 +1028,7 @@ if (includeEosSharpTest)
                     "tsd)) throw new ApplicationException($\"Values don\'t match: {ts} Vs {tsd} (\'{raw}" +
                     "\' serialized: {json})\");\r\n        }\r\n    }\r\n");
             
-            #line 863 "D:\github\ABI2CSharp\Templates\AbiCodeGen.tt"
+            #line 940 "C:\GIT\ABI2CSharp\Templates\AbiCodeGen.tt"
  }
 
             
