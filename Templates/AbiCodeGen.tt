@@ -122,7 +122,7 @@ namespace Abi2CSharp
 {
     public static partial class Contracts
     {
-        public static class <#= contractClassTypeName #>
+        public static partial class <#= contractClassTypeName #>
         {
             public const string contract = "<#= contractName #>";
             public static class Actions
@@ -167,7 +167,7 @@ namespace Abi2CSharp
 <#  }
 } #>
             }
-            public static class Types
+            public static partial class Types
             {
 <# foreach (string i in VariantInterfaces) { #>
                 public interface <#= i #> { }
@@ -187,11 +187,11 @@ namespace Abi2CSharp
     }
     if (variantUsageLookup.TryGetValue(type, out var interfaces))
     { #>
-                public class <#= className #> : <#= string.Join(", ", interfaces) #> {
+                public partial class <#= className #> : <#= string.Join(", ", interfaces) #> {
 <#  }
     else
     { #>
-                public class <#= className #> {
+                public partial class <#= className #> {
 <#  }
 foreach (var field in types[type])
     { #>
@@ -525,7 +525,7 @@ foreach (var field in types[type])
         }
         [JsonConverter(typeof(CustomJsonConverter<Asset>))]
 	    public class Asset : ICustomSerialize<Asset>
-	    {
+	    {        
 		    const string EnglishCultureName = "en-GB";
 		    static readonly CultureInfo EnglishCulture = new CultureInfo(EnglishCultureName);
 		    public Symbol Token { get; set; }
@@ -537,6 +537,11 @@ foreach (var field in types[type])
 		    /// </remarks>
 		    public override string ToString() => $"{BalanceDecimal.ToString($"F{Token.precision}", EnglishCulture)} {Token.name}";
             public Asset() { } // Empty constructor for serializing
+		    public Asset(Symbol token, UInt64 balance)
+            {
+			    Token = token;
+			    Balance = balance;
+            }
 		    public static implicit operator Asset(string value)
 		    {
 			    Asset result = new Asset();
@@ -556,6 +561,78 @@ foreach (var field in types[type])
 		    public Asset Deserialize(JsonReader reader) => (string)reader.Value;
 		    public override int GetHashCode() => ToString().GetHashCode();
 		    public override bool Equals(object obj) => obj?.GetHashCode().Equals(GetHashCode()) ?? false;
+		    public static Asset operator +(Asset a, Asset b)
+            {
+			    System.Diagnostics.Contracts.Contract.Requires<ArgumentException>(a.Token == b.Token, "Both assets need to be the same token!");
+			    return new Asset(a.Token, a.Balance + b.Balance);
+		    }
+		    public static Asset operator -(Asset a, Asset b)
+		    {
+			    System.Diagnostics.Contracts.Contract.Requires<ArgumentException>(a.Token == b.Token, "Both assets need to be the same token!");
+			    return new Asset(a.Token, a.Balance - b.Balance);
+		    }
+		    public static Asset operator *(Asset x, ulong multi)
+			    => new Asset(x.Token, x.Balance * multi);
+		    public static Asset operator /(Asset x, ulong multi)
+		    {
+			    System.Diagnostics.Contracts.Contract.Requires<DivideByZeroException>(multi > 0, "Cannot divide by zero");
+			    return new Asset(x.Token, x.Balance / multi);
+		    }
+	    }        
+        [JsonConverter(typeof(CustomJsonConverter<ExtendedAsset>))]
+	    public class ExtendedAsset : ICustomSerialize<ExtendedAsset>
+	    {	
+		    public Asset Quantity { get; set; }
+		    public Name Contract { get; set; }
+		    public override string ToString() => $"{Quantity.ToString()}@{Contract}";
+            public ExtendedAsset() { } // Empty constructor for serializing
+		    public ExtendedAsset(Asset quantity, Name contract)
+            {
+			    Quantity = quantity;
+			    Contract = contract;
+            }
+		    public static implicit operator ExtendedAsset(string value)
+		    {
+			    Asset result = new Asset();
+			    string[] parts = value.Split('@');
+			    if (parts.Length != 2) throw new ArgumentException($"Cannot parse '{value}' as a valid token balance", nameof(value));
+			    return new ExtendedAsset(parts[0], parts[1]);
+		    }
+		    public static implicit operator string(ExtendedAsset value) => value.ToString();
+		    public string Serialize() => ToString();
+		    public ExtendedAsset Deserialize(JsonReader reader)
+            {
+                // Read Start object Token.
+                reader.Read();
+                reader.Read();
+                Asset quantity = (string)reader.Value;
+                reader.Read();
+                reader.Read();
+                Name contract = (string)reader.Value;
+                reader.Read();
+                return new ExtendedAsset(quantity, contract);
+            }
+		    public override int GetHashCode() => ToString().GetHashCode();
+		    public override bool Equals(object obj) => obj?.GetHashCode().Equals(GetHashCode()) ?? false;
+		    public static ExtendedAsset operator +(ExtendedAsset a, ExtendedAsset b)
+            {
+			    System.Diagnostics.Contracts.Contract.Requires<ArgumentException>(a.Contract == b.Contract, "Both assets need to be the same contract!");
+                System.Diagnostics.Contracts.Contract.Requires<ArgumentException>(a.Quantity.Token == b.Quantity.Token, "Both assets need to be the same token!");
+                return new ExtendedAsset(a.Quantity + b.Quantity, a.Contract);
+		    }
+		    public static ExtendedAsset operator -(ExtendedAsset a, ExtendedAsset b)
+            {
+                System.Diagnostics.Contracts.Contract.Requires<ArgumentException>(a.Contract == b.Contract, "Both assets need to be the same contract!");
+                System.Diagnostics.Contracts.Contract.Requires<ArgumentException>(a.Quantity.Token == b.Quantity.Token, "Both assets need to be the same token!");
+                return new ExtendedAsset(a.Quantity - b.Quantity, a.Contract);
+            }
+		    public static ExtendedAsset operator *(ExtendedAsset x, ulong multi)
+			    => new ExtendedAsset(x.Quantity * multi, x.Contract);
+		    public static ExtendedAsset operator /(ExtendedAsset x, ulong multi)
+		    {
+			    System.Diagnostics.Contracts.Contract.Requires<DivideByZeroException>(multi > 0, "Cannot divide by zero");
+			    return new ExtendedAsset(x.Quantity / multi, x.Contract);
+		    }
 	    }
         [JsonConverter(typeof(CustomJsonConverter<CheckSum256>))]
         public class CheckSum256 : ICustomSerialize<CheckSum256>

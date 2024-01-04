@@ -58,6 +58,12 @@ The last two parameters can be swapped as long as one is a valid number and the 
 
 **Note:** ABI's are cached; if you want to make sure they are re-downloaded from chain, delete the cache file inside the `./abis/` folder.
 
+### Video example of how to create an application to claim and renew your vote rewards on Wax
+
+[![Interacting with the Wax (Antelope) BlockChain using C#](https://img.youtube.com/vi/sJp7pVfUUkM/0.jpg)](https://www.youtube.com/watch?v=sJp7pVfUUkM)
+
+[Code accompanying the video](https://github.com/NKCSS/Wax-VoterClaim-using-ABI2CSharp)
+
 ### Example program using generated `eosio` code
 
 ```csharp
